@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/itmTodos"
+        android:icon="@drawable/ic_baseline_list_alt_24"
+        android:title="@string/todos" />
+    <item
+        android:id="@+id/itmAberta"
+        android:icon="@drawable/open_icon"
+        android:title="@string/aberta" />
+    <item
+        android:id="@+id/itmCancelada"
+        android:icon="@drawable/close_icon"
+        android:title="@string/cancelada" />
+    <item
+        android:id="@+id/itmFinalizada"
+        android:icon="@drawable/check_icon"
+        android:title="@string/finalizada" />
+</menu>

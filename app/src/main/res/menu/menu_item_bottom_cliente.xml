@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/itmTodos"
+        android:icon="@drawable/ic_baseline_list_alt_24"
+        android:title="@string/todos" />
+    <item
+        android:id="@+id/itmDesbloqueado"
+        android:icon="@drawable/unlock_icon"
+        android:title="@string/desbloqueado" />
+    <item
+        android:id="@+id/itmBloqueado"
+        android:icon="@drawable/lock_icon"
+        android:title="@string/bloqueado" />
+</menu>

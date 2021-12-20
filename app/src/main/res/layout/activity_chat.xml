@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E0E0E0"
+    tools:context=".TelaChat">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rVChat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toTopOf="@+id/fLSend"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/fLSend"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/editTChat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editTChat"
+        app:layout_constraintTop_toTopOf="@+id/editTChat">
+
+        <ImageButton
+            android:id="@+id/imgBEnviar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_ripple"
+            android:contentDescription="@string/enviar"
+            app:srcCompat="@drawable/ic_baseline_send_24"
+            tools:ignore="ImageContrastCheck,TouchTargetSizeCheck,UnusedAttribute" />
+
+    </FrameLayout>
+
+    <EditText
+        android:id="@+id/editTChat"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/edittext_rounded"
+        android:ems="10"
+        android:hint="@string/mensagem"
+        android:imeOptions="actionSend"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName|textCapSentences"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/fLSend"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rVChat"
+        app:layout_constraintVertical_bias="1"
+        tools:ignore="TextContrastCheck" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

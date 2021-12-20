@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable-v24/bg_edittext_rounded_to.xml" value="0.23796296296296296" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable-v24/edittext_rounded.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2890625" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/backgroud_spinner.xml" value="0.23055555555555557" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/backgroud_to_message.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/bg_button_rounded.xml" value="0.275" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/bg_edittext_rounded.xml" value="0.275" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/bg_edittext_rounded_from.xml" value="0.23796296296296296" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/bg_edittext_rounded_to.xml" value="0.23796296296296296" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/borda.xml" value="0.2890625" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/button_back.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/button_pressed.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/button_ripple.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/button_selector.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/default_button.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/edittext_rounded.xml" value="0.2037037037037037" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.159375" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/ic_baseline_send_24.xml" value="0.2175925925925926" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/ic_filter_state.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2890625" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/roundedbutton.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/send_image_background.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/drawable/send_image_foreground.xml" value="0.20833333333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-land/activity_abertura.xml" value="0.2" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-land/activity_alterar_senha.xml" value="0.22" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-land/activity_cadastro.xml" value="0.20052083333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-land/activity_config_conta.xml" value="0.20052083333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-land/activity_informacao_servico.xml" value="0.21" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-land/activity_informacao_servico_admin.xml" value="0.25" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-land/activity_login.xml" value="0.20052083333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-land/activity_menu.xml" value="0.20625" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-land/activity_solicitar_orcamento.xml" value="0.20052083333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-land/activity_tela_confirmacao_excluir_conta.xml" value="0.20052083333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-land/activity_tela_informacao_servico.xml" value="0.16" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-land/activity_tela_recuperar_senha.xml" value="0.20052083333333334" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-land/item_to_message.xml" value="0.25833333333333336" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-v23/lista_item_cliente.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-v26/activity_menu.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-v26/lista_item.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-v26/lista_item_comentario.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-v26/lista_item_servico.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout-v26/lista_item_servico_admin.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_abertura.xml" value="0.33" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_alterar_senha.xml" value="0.25" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_cadastro.xml" value="0.25" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_chat.xml" value="0.25" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_config_conta.xml" value="0.33" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_config_conta_admin.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_confirmacao_excluir_conta.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_consultar.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_consultar_servico.xml" value="0.19791666666666666" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_informacao_servico.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_informacao_servico_admin.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_listar_cliente.xml" value="0.26461538461538464" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_login.xml" value="0.25" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_main.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_menu.xml" value="0.33" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_menu_admin.xml" value="0.33" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_menu_cliente.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_recuperar_senha.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_solicitar_orcamento.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_tela_confirmacao_excluir_conta.xml" value="0.33" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_tela_consultar_comentario.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_tela_informacao_ordem_servico.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_tela_informacao_servico.xml" value="0.33" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_tela_recuperar_senha.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/activity_verificar_servico.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/dialog_editar_conta.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/dialog_senha.xml" value="0.25" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/fragment_config_conta.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/fragment_recyclerview.xml" value="0.25" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/item_from_message.xml" value="0.33" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/item_ordem_servico.xml" value="0.28125" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/item_to_message.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/lista_item.xml" value="0.25" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/lista_item_cliente.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/lista_item_comentario.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/lista_item_servico.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/lista_item_servico_admin.xml" value="0.25" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/layout/spinner_item.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/menu/menu_item.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/menu/menu_item_bottom.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/menu/menu_item_bottom_cliente.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/menu/menu_item_bottom_servico.xml" value="0.26875" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/menu/menu_item_comentario.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/menu/menu_item_servico.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2890625" />
+        <entry key="..\:/Android/AndroidStudioProjects/ProjetoOrdensDeServicos/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.2890625" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2890625" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2890625" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/layout-v26/activity_login.xml" value="0.19791666666666666" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/layout/activity_abertura.xml" value="0.19610507246376813" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/layout/activity_alterar_senha.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/layout/activity_cadastro.xml" value="0.19791666666666666" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/layout/activity_config_conta.xml" value="0.22" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/layout/activity_conta.xml" value="0.21557971014492755" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/layout/activity_login.xml" value="0.19610507246376813" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/layout/activity_menu.xml" value="0.223731884057971" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/layout/activity_orcamento.xml" value="0.27291666666666664" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/layout/activity_ordem_de_servico.xml" value="0.21965579710144928" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/layout/activity_relatorio.xml" value="0.22" />
+        <entry key="..\:/Android/AndroidStudioProjects/Tarefa190921/app/src/main/res/layout/activity_solicitar_orcamento.xml" value="0.33" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.19791666666666666" />
+      </ProjectState>
+    </option>
+  </component>
+</project>

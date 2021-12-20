@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="br.com.fatec.projetoOrdensDeServicos">
+
+    <application
+        android:allowBackup="true"
+        android:fullBackupContent="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.projetoOrdensDeServicos">
+        <activity
+            android:name=".TelaChat"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".telaAdmin.TelaListarServicoCliente" />
+        </activity>
+        <activity
+            android:name=".telaAdmin.TelaListarServicoCliente"
+            android:exported="false"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".telaAdmin.TelaListarCliente" />
+        </activity>
+        <activity
+            android:name=".telaAdmin.TelaInformacaoServicoAdmin"
+            android:exported="false"
+            android:label="@string/app_name_tela_informação_servico">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".telaAdmin.TelaConsultarServicoAdmin" />
+        </activity>
+        <activity
+            android:name=".telaAdmin.TelaListarCliente"
+            android:exported="false"
+            android:label="@string/app_name_tela_listar_cliente"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".telaAdmin.TelaMenuAdmin" />
+        </activity>
+        <activity
+            android:name=".telaAdmin.TelaConsultarServicoAdmin"
+            android:exported="false"
+            android:label="@string/app_name_tela_consultar_servico"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".telaAdmin.TelaMenuAdmin" />
+        </activity>
+        <activity
+            android:name=".telaAdmin.TelaMenuAdmin"
+            android:exported="false" />
+        <activity
+            android:name=".telaCliente.TelaInformacaoServico"
+            android:exported="false"
+            android:label="@string/app_name_tela_informação_servico">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".telaCliente.TelaConsultarServico" />
+        </activity>
+        <activity
+            android:name=".telaCliente.TelaConfirmacaoExcluirConta"
+            android:exported="false"
+            android:label="@string/app_name_tela_config">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".telaCliente.TelaConfigConta" />
+        </activity>
+        <activity
+            android:name=".TelaRecuperarSenha"
+            android:exported="false"
+            android:label="@string/app_name_tela_recuperar_senha">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".TelaLogin" />
+        </activity>
+        <activity
+            android:name=".telaCliente.TelaAlterarSenha"
+            android:exported="false"
+            android:label="@string/app_name_tela_config">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".telaCliente.TelaConfigConta" />
+        </activity>
+        <activity
+            android:name=".telaCliente.TelaConfigConta"
+            android:exported="false"
+            android:label="@string/app_name_tela_config">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".telaCliente.TelaMenuCliente" />
+        </activity>
+        <activity
+            android:name=".telaCliente.TelaSolicitarOrcamento"
+            android:exported="false" />
+        <activity
+            android:name=".telaCliente.TelaConsultarServico"
+            android:exported="false"
+            android:label="@string/app_name_tela_consultar_servico"
+            android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".telaCliente.TelaMenuCliente" />
+        </activity>
+        <activity
+            android:name=".telaCliente.TelaMenuCliente"
+            android:exported="false" />
+        <activity
+            android:name=".TelaCadastro"
+            android:exported="false" />
+        <activity
+            android:name=".TelaLogin"
+            android:exported="false" />
+        <activity
+            android:name=".TelaAbertura"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

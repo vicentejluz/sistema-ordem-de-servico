@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "176458565181",
+    "project_id": "ordemdeservicoadm-a6786",
+    "storage_bucket": "ordemdeservicoadm-a6786.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176458565181:android:9de06bee059607cb61cc54",
+        "android_client_info": {
+          "package_name": "br.com.fatec.projetoOrdensDeServicos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "176458565181-1h6htcvcem8nulvp0kgvti5bdtkh4din.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.fatec.projetoOrdensDeServicos",
+            "certificate_hash": "d2d57d1e43b21f065a36a4ff1f2b322ad1a76ef4"
+          }
+        },
+        {
+          "client_id": "176458565181-pidi0d4jt2sgcrj400qcice4i46tcuag.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaRecYmqIbbMTucI7Takb1E87mqh0vzUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "176458565181-pidi0d4jt2sgcrj400qcice4i46tcuag.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
