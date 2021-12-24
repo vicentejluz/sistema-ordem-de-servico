@@ -81,15 +81,17 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
                 statusServicos) {
             @Override
             public boolean isEnabled(int position) {
-                if (txtStatus.getSelectedItem().toString().equals(StatusOrdemServico.CANCELADA
+                if (status.equals(StatusOrdemServico.CANCELADA
                         .toString())) {
                     if (position == 3)
                         return false;
                     if (position == 0)
                         return true;
                 }
-                if (timestampDataAbertura == null) {
+                if (timestampDataAbertura == null || status.equals("AGUARDANDO APROVAÇÃO")) {
                     if (position == 1)
+                        return false;
+                    if (position == 3)
                         return false;
                 }
 
@@ -101,15 +103,17 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
                                         @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
-                if (timestampDataAbertura == null) {
+                if (timestampDataAbertura == null || status.equals("AGUARDANDO APROVAÇÃO")) {
                     if (position == 1)
                         tv.setTextColor(Color.GRAY);
+                    if (position == 3)
+                        tv.setTextColor(Color.GRAY);
                 }
-                if (txtStatus.getSelectedItem().toString().equals(StatusOrdemServico.CANCELADA
+                if (status.equals(StatusOrdemServico.CANCELADA
                         .name())) {
                     if (position == 3)
                         tv.setTextColor(Color.GRAY);
-                } else if (txtStatus.getSelectedItem().toString().equals(StatusOrdemServico.ABERTA
+                } else if (status.equals(StatusOrdemServico.ABERTA
                         .name())) {
                     if (position == 0)
                         tv.setTextColor(Color.GRAY);
@@ -255,10 +259,10 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
             Toast.makeText(this, "Para Mudar preço depois de Aberto o cliente tem que " +
                     "cancelar o serviço", Toast.LENGTH_LONG).show();
             onStart();
-        } else if(item.equals("AGUARDANDO APROVAÇÃO") && ordemServico.getPreco() == 0.0){
+        } else if (item.equals("AGUARDANDO APROVAÇÃO") && ordemServico.getPreco() == 0.0) {
             Toast.makeText(this, "Adicione um valor maior que 0 para preço",
                     Toast.LENGTH_LONG).show();
-        } else{
+        } else {
             if (item.equals("AGUARDANDO APROVAÇÃO"))
                 item = "-";
             if (!status.equals(item))
