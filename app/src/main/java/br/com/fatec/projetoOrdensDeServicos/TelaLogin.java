@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -29,8 +28,7 @@ import br.com.fatec.projetoOrdensDeServicos.telaCliente.TelaMenuCliente;
 
 public class TelaLogin extends AppCompatActivity implements View.OnClickListener {
     private TextInputEditText txtEmail, txtSenha;
-    private TextView txtRecuperarSenha;
-    private Button btnEntrar, btnCadastro;
+    private Button btnEntrar, btnCadastro, btnRecuperarSenha;
     private String email, privilegio, statusConta;
     private FirebaseAuth autenticacao;
     private final FirebaseFirestore DB = FirebaseFirestore.getInstance();
@@ -45,11 +43,11 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
         pBCarregar = findViewById(R.id.pBCarregar);
         txtEmail = findViewById(R.id.txtEmail);
         txtSenha = findViewById(R.id.txtSenha);
-        txtRecuperarSenha = findViewById(R.id.txtRecuperarSenha);
+        btnRecuperarSenha = findViewById(R.id.btnRecuperarSenha);
         btnCadastro = findViewById(R.id.btnCadastro);
         btnEntrar = findViewById(R.id.btnEntrar);
         autenticacao = FirebaseAuth.getInstance();
-        txtRecuperarSenha.setOnClickListener(this);
+        btnRecuperarSenha.setOnClickListener(this);
         btnCadastro.setOnClickListener(this);
         btnEntrar.setOnClickListener(this);
     }
@@ -124,7 +122,7 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
                         InputMethodManager.HIDE_NOT_ALWAYS);
                 logarUsuario();
                 break;
-            case R.id.txtRecuperarSenha:
+            case R.id.btnRecuperarSenha:
                 telarecuperarSenha();
                 break;
         }
@@ -152,7 +150,7 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
         pBCarregar.setVisibility(View.VISIBLE);
         btnEntrar.setEnabled(false);
         btnCadastro.setEnabled(false);
-        txtRecuperarSenha.setEnabled(false);
+        btnRecuperarSenha.setEnabled(false);
         new Handler().postDelayed(() -> {
             Toast.makeText(TelaLogin.this, "Logado com sucesso: " + email,
                     Toast.LENGTH_LONG).show();

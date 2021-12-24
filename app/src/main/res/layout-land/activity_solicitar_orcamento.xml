@@ -17,8 +17,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:gravity="center"
+            android:orientation="vertical"
             android:paddingStart="100dp"
             android:paddingEnd="100dp">
 
@@ -58,7 +58,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="start">
+                android:gravity="start"
+                app:counterEnabled="true"
+                app:counterMaxLength="250">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtDescricao"

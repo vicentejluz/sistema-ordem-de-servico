@@ -53,8 +53,8 @@ public class TelaConfigConta extends AppCompatActivity implements View.OnClickLi
         txtEmail = findViewById(R.id.txtEmail);
         Button btnEditar = findViewById(R.id.btnEditar);
         Button btnAlterarSenha = findViewById(R.id.btnAlterarSenha);
-        TextView txtExcluir = findViewById(R.id.txtExcluir);
-        txtExcluir.setOnClickListener(this);
+        Button btnExcluir = findViewById(R.id.btnExcluir);
+        btnExcluir.setOnClickListener(this);
         btnEditar.setOnClickListener(this);
         btnAlterarSenha.setOnClickListener(this);
         txtTel.addTextChangedListener(Mascara.insert(Mascara.MaskType.TEL, txtTel));
@@ -90,7 +90,7 @@ public class TelaConfigConta extends AppCompatActivity implements View.OnClickLi
             case R.id.btnAlterarSenha:
                 telaAlterarSenha();
                 break;
-            case R.id.txtExcluir:
+            case R.id.btnExcluir:
                 confirmarExclucao();
                 break;
         }

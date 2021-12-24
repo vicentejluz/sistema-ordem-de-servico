@@ -92,16 +92,15 @@
                 android:textSize="20sp"
                 app:cornerRadius="30dp" />
 
-            <TextView
-                android:id="@+id/txtRecuperarSenha"
-                android:layout_width="150dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"
-                android:background="?android:attr/selectableItemBackground"
+            <Button
+                android:id="@+id/btnRecuperarSenha"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
                 android:fontFamily="sans-serif-condensed-medium"
-                android:gravity="center"
                 android:text="@string/esqueceu_a_senha"
-                android:textAlignment="center"
+                android:textAllCaps="false"
                 android:textColor="@color/azul_ab"
                 android:textSize="16sp"
                 android:textStyle="italic" />
