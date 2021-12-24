@@ -24,9 +24,9 @@ public class TelaListarCliente extends AppCompatActivity {
         bNVStatusConta = findViewById(R.id.bNVStatusConta);
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(
-                    R.id.fragment_container_recyclerview, new TodosClientesFragment()).commit();
+            LoadFragment(new TodosClientesFragment());
         }
+
         bNVStatusConta.setOnItemSelectedListener(item -> {
             Fragment selecionarfragmento = null;
             switch (item.getItemId()) {
@@ -44,10 +44,16 @@ public class TelaListarCliente extends AppCompatActivity {
                     selecionarfragmento.setArguments(statusConta);
                     break;
             }
-            assert selecionarfragmento != null;
+            return LoadFragment(selecionarfragmento);
+        });
+    }
+
+    private boolean LoadFragment(Fragment selecionarfragmento) {
+        if (selecionarfragmento != null) {
             getSupportFragmentManager().beginTransaction().replace(
                     R.id.fragment_container_recyclerview, selecionarfragmento).commit();
             return true;
-        });
+        }
+        return false;
     }
 }

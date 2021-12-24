@@ -19,8 +19,7 @@ import java.util.List;
 import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.entity.Cliente;
 
-public class ClienteAdapter extends RecyclerView.Adapter<ClienteAdapter
-        .ClienteViewHolder> {
+public class ClienteAdapter extends RecyclerView.Adapter<ClienteAdapter.ClienteViewHolder> {
     Context context;
     List<Cliente> clientes;
     private final EditarClienteClickListener editarClienteClickListener;
@@ -114,7 +113,7 @@ public class ClienteAdapter extends RecyclerView.Adapter<ClienteAdapter
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(@NonNull View v) {
             if (v.getId() == R.id.imBStatusConta)
                 statusContaClickListener.StatusContaClick(v, getAbsoluteAdapterPosition());
             else if (v.getId() == R.id.imBEditar)

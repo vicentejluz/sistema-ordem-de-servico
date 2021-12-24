@@ -52,7 +52,8 @@ public class SelecionarStatusClienteFragment extends Fragment {
     private ClienteAdapter.ListarServicoClickListener listarServicoClickListener;
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_recyclerview, container, false);
         RecyclerView rVConsultar = v.findViewById(R.id.rVListarCliente);
         rVConsultar.setHasFixedSize(true);
