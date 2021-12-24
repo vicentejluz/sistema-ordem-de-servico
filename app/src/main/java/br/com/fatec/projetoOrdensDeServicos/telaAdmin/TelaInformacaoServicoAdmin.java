@@ -88,7 +88,7 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
                     if (position == 0)
                         return true;
                 }
-                if (timestampDataAbertura == null || status.equals("AGUARDANDO APROVAÇÃO")) {
+                if (timestampDataAbertura == null) {
                     if (position == 1)
                         return false;
                     if (position == 3)
@@ -103,18 +103,18 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
                                         @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
-                if (timestampDataAbertura == null || status.equals("AGUARDANDO APROVAÇÃO")) {
+                if (timestampDataAbertura == null) {
                     if (position == 1)
                         tv.setTextColor(Color.GRAY);
                     if (position == 3)
                         tv.setTextColor(Color.GRAY);
                 }
-                if (status.equals(StatusOrdemServico.CANCELADA
-                        .name())) {
+                if (status.equals(StatusOrdemServico.CANCELADA.name())) {
                     if (position == 3)
                         tv.setTextColor(Color.GRAY);
-                } else if (status.equals(StatusOrdemServico.ABERTA
-                        .name())) {
+                    if (position == 0)
+                        tv.setTextColor(Color.BLACK);
+                } else if (status.equals(StatusOrdemServico.ABERTA.name())) {
                     if (position == 0)
                         tv.setTextColor(Color.GRAY);
                 } else {
