@@ -36,25 +36,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-black"
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="150dp"
                 android:layout_marginEnd="150dp"
-                android:text="@string/menu"
+                android:text="@string/menu_de_administrador"
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textColor="@color/azul_ab"
                 android:textSize="48sp" />
-
-            <TextView
-                android:id="@+id/txtADM"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="150dp"
-                android:layout_marginEnd="150dp"
-                android:fontFamily="sans-serif-condensed-light"
-                android:textAlignment="center"
-                android:textColor="@color/azul_ab"
-                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/btnListarCliente"
