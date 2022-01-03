@@ -2,7 +2,6 @@ package br.com.fatec.projetoOrdensDeServicos.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.NumberFormat;
@@ -49,7 +48,6 @@ public class OrdemServicoAdminAdapter extends RecyclerView.Adapter<OrdemServicoA
         this.chatServicoClickListener = chatServicoClickListener;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
     public OrdemServicoAdminAdapter.OrdemServicoAdminViewHolder onCreateViewHolder(
@@ -60,7 +58,6 @@ public class OrdemServicoAdminAdapter extends RecyclerView.Adapter<OrdemServicoA
                 excluirOrdemServicoClickListener, chatServicoClickListener);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull OrdemServicoAdminAdapter.OrdemServicoAdminViewHolder holder,
                                  int position) {
@@ -75,15 +72,16 @@ public class OrdemServicoAdminAdapter extends RecyclerView.Adapter<OrdemServicoA
         }
 
         holder.imBExcluir.setEnabled(true);
-        holder.imBExcluir.setTooltipText("Excluir Serviço");
+        TooltipCompat.setTooltipText(holder.imBExcluir, "Excluir Serviço");
         holder.txtNomeServico.setText(ordemServico.getNomeServico().substring(0, 1)
                 .toUpperCase().concat(ordemServico.getNomeServico().substring(1)));
         holder.txtDescricao.setText(ordemServico.getDescricao().substring(0, 1)
                 .toUpperCase().concat(ordemServico.getDescricao().substring(1)));
-        holder.txtPreco.setText(NumberFormat.getCurrencyInstance(LOCALE).format(ordemServico.getPreco()));
+        holder.txtPreco.setText(NumberFormat.getCurrencyInstance(LOCALE).format(ordemServico
+                .getPreco()));
         holder.txtStatus.setText(ordemServico.getStatus().substring(0, 1)
                 .concat(ordemServico.getStatus().substring(1).toLowerCase()));
-        holder.imBChat.setTooltipText("Chat");
+        TooltipCompat.setTooltipText(holder.imBChat, "Chat");
         restricoes(holder, ordemServico);
     }
 
@@ -150,10 +148,10 @@ public class OrdemServicoAdminAdapter extends RecyclerView.Adapter<OrdemServicoA
         ExcluirOrdemServicoClickListener excluirOrdemServicoClickListener;
         ChatServicoClickListener chatServicoClickListener;
 
-        public OrdemServicoAdminViewHolder(@NonNull View itemView,
-                                           OrdemServicoAdminClickListener ordemServicoAdminClickListener,
-                                           ExcluirOrdemServicoClickListener excluirOrdemServicoClickListener,
-                                           ChatServicoClickListener chatServicoClickListener) {
+        public OrdemServicoAdminViewHolder(@NonNull View itemView, OrdemServicoAdminClickListener
+                ordemServicoAdminClickListener, ExcluirOrdemServicoClickListener
+                excluirOrdemServicoClickListener, ChatServicoClickListener
+                chatServicoClickListener) {
             super(itemView);
             txtNomeServico = itemView.findViewById(R.id.txtNomeServico);
             txtDescricao = itemView.findViewById(R.id.txtDescricao);
@@ -175,11 +173,13 @@ public class OrdemServicoAdminAdapter extends RecyclerView.Adapter<OrdemServicoA
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.imBExcluir)
-                excluirOrdemServicoClickListener.ExcluirOrdemServicoClick(v, getAbsoluteAdapterPosition());
+                excluirOrdemServicoClickListener.ExcluirOrdemServicoClick(v,
+                        getAbsoluteAdapterPosition());
             else if (v.getId() == R.id.imBChat)
                 chatServicoClickListener.ChatServicoClick(v, getAbsoluteAdapterPosition());
             else
-                ordemServicoAdminClickListener.OrdemServicoAdminClick(v, getAbsoluteAdapterPosition());
+                ordemServicoAdminClickListener.OrdemServicoAdminClick(v,
+                        getAbsoluteAdapterPosition());
         }
     }
 

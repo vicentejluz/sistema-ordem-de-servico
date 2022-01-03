@@ -3,7 +3,6 @@ package br.com.fatec.projetoOrdensDeServicos.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -37,7 +36,6 @@ public class ClienteAdapter extends RecyclerView.Adapter<ClienteAdapter.ClienteV
         this.listarServicoClickListener = listarServicoClickListener;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
     public ClienteAdapter.ClienteViewHolder onCreateViewHolder(
@@ -48,7 +46,6 @@ public class ClienteAdapter extends RecyclerView.Adapter<ClienteAdapter.ClienteV
                 listarServicoClickListener);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ClienteAdapter.ClienteViewHolder holder,
                                  int position) {
@@ -61,21 +58,21 @@ public class ClienteAdapter extends RecyclerView.Adapter<ClienteAdapter.ClienteV
         holder.txtEmail.setText(cliente.getEmail());
         holder.txtTel.setText(cliente.getTelefone());
         holder.txtStatusConta.setText(cliente.getStatusConta());
-        holder.imBEditar.setTooltipText("Editar conta");
+        TooltipCompat.setTooltipText(holder.imBEditar, "Editar conta");
         StatusConta(holder, cliente, backgroundOff);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void StatusConta(ClienteViewHolder holder, @NonNull Cliente cliente, Drawable backgroundOff) {
+    private void StatusConta(ClienteViewHolder holder, @NonNull Cliente cliente,
+                             Drawable backgroundOff) {
         int red = 0x70F43636;
         if (cliente.getStatusConta().equalsIgnoreCase("Bloqueado")) {
             holder.imBStatusConta.setBackgroundResource(R.drawable.lock_icon);
             backgroundOff.setTint(red);
             holder.itemView.setBackground(backgroundOff);
-            holder.imBStatusConta.setTooltipText("Bloqueado");
+            TooltipCompat.setTooltipText(holder.imBStatusConta, "Bloqueado");
         } else {
             holder.imBStatusConta.setBackgroundResource(R.drawable.unlock_icon);
-            holder.imBStatusConta.setTooltipText("Desbloqueado");
+            TooltipCompat.setTooltipText(holder.imBStatusConta, "Desbloqueado");
             backgroundOff.setTint(Color.WHITE);
             holder.itemView.setBackground(backgroundOff);
         }
@@ -86,15 +83,16 @@ public class ClienteAdapter extends RecyclerView.Adapter<ClienteAdapter.ClienteV
         return clientes.size();
     }
 
-    public static class ClienteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ClienteViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
         TextView txtNome, txtEmail, txtTel, txtStatusConta;
         ImageButton imBStatusConta, imBEditar;
         StatusContaClickListener statusContaClickListener;
         EditarClienteClickListener editarClienteClickListener;
         ListarServicoClickListener listarServicoClickListener;
 
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        public ClienteViewHolder(@NonNull View itemView, StatusContaClickListener statusContaClickListener,
+        public ClienteViewHolder(@NonNull View itemView,
+                                 StatusContaClickListener statusContaClickListener,
                                  EditarClienteClickListener editarClienteClickListener,
                                  ListarServicoClickListener listarServicoClickListener) {
             super(itemView);

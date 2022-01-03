@@ -3,7 +3,6 @@ package br.com.fatec.projetoOrdensDeServicos.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -49,7 +48,6 @@ public class OrdemServicoAdapter extends RecyclerView.Adapter<OrdemServicoAdapte
         return new OrdemServicoViewHolder(v, ordemServicoClickListener, chatServicoClickListener);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull OrdemServicoAdapter.OrdemServicoViewHolder holder,
                                  int position) {
@@ -61,7 +59,7 @@ public class OrdemServicoAdapter extends RecyclerView.Adapter<OrdemServicoAdapte
                 .toUpperCase().concat(ordemServico.getDescricao().substring(1)));
         holder.txtStatus.setText(ordemServico.getStatus().substring(0, 1)
                 .concat(ordemServico.getStatus().substring(1).toLowerCase()));
-        holder.imBChat.setTooltipText("Chat de suporte");
+        TooltipCompat.setTooltipText(holder.imBChat, "Chat de suporte");
     }
 
     @Override
