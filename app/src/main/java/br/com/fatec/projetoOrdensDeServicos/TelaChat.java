@@ -1,19 +1,16 @@
 package br.com.fatec.projetoOrdensDeServicos;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,42 +31,38 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityChatBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.Comentario;
 
 public class TelaChat extends AppCompatActivity implements View.OnClickListener {
     private String nomeServico, cliente, usuarioID, idServico, privilegio;
-    private EditText editTChat;
     private FirebaseFirestore db;
     String toId, fromId;
     private String eu;
     private GroupieAdapter groupieAdapter;
-    RecyclerView rVChat;
+    private ActivityChatBinding binding;
     private final String IDCHAT = "pb6IdWjCKogMvZlnpH4bl13lCM22AD";
     private final Locale LOCALE = new Locale("pt", "BR");
     private final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(
             "dd MMMM, yyyy - HH:mm a", LOCALE);
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
-        rVChat = findViewById(R.id.rVChat);
-        editTChat = findViewById(R.id.editTChat);
-        ImageButton imBEnviar = findViewById(R.id.imgBEnviar);
-        imBEnviar.setTooltipText("Enviar");
-        imBEnviar.setOnClickListener(this);
+        binding = ActivityChatBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        TooltipCompat.setTooltipText(binding.imgBEnviar, "Enviar");
+        binding.imgBEnviar.setOnClickListener(this);
         db = FirebaseFirestore.getInstance();
         dadosItemLista();
         Objects.requireNonNull(getSupportActionBar()).setTitle(nomeServico.substring(0, 1)
                 .toUpperCase().concat(nomeServico.substring(1).toLowerCase()));
         groupieAdapter = new GroupieAdapter();
-        rVChat.setLayoutManager(new LinearLayoutManager(this));
-        rVChat.setAdapter(groupieAdapter);
+        binding.rVChat.setLayoutManager(new LinearLayoutManager(this));
+        binding.rVChat.setAdapter(groupieAdapter);
         listarMundancaEvento();
-
-        editTChat.setOnEditorActionListener((v, actionId, event) -> {
+        binding.editTChat.setOnEditorActionListener((v, actionId, event) -> {
             boolean handled = false;
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 setFromId();
@@ -77,12 +70,11 @@ public class TelaChat extends AppCompatActivity implements View.OnClickListener 
             }
             return handled;
         });
-
-        rVChat.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight,
-                                          oldBottom) -> {
+        binding.rVChat.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop,
+                                                  oldRight, oldBottom) -> {
             if (bottom < oldBottom) {
-                rVChat.smoothScrollToPosition(Objects.requireNonNull(rVChat.getAdapter())
-                        .getItemCount());
+                binding.rVChat.smoothScrollToPosition(Objects.requireNonNull(binding.rVChat
+                        .getAdapter()).getItemCount());
             }
         });
 
@@ -103,9 +95,9 @@ public class TelaChat extends AppCompatActivity implements View.OnClickListener 
                         Toast.makeText(this, "Serviços não encontrado",
                                 Toast.LENGTH_LONG).show();
                     }
-                    db.collection("usuarios").document(Objects.requireNonNull(FirebaseAuth
-                            .getInstance().getUid())).get()
-                            .addOnSuccessListener(documentSnapshot -> {
+                    db.collection("usuarios").document(Objects.requireNonNull(
+                            FirebaseAuth.getInstance().getUid())).get().addOnSuccessListener(
+                            documentSnapshot -> {
                                 privilegio = documentSnapshot.getString("privilegio");
                                 assert privilegio != null;
                                 if (privilegio.equalsIgnoreCase("Cliente"))
@@ -143,7 +135,8 @@ public class TelaChat extends AppCompatActivity implements View.OnClickListener 
                             if (doc.getType() == DocumentChange.Type.ADDED) {
                                 Comentario comentario = doc.getDocument().toObject(Comentario.class);
                                 groupieAdapter.add(new ItemMensagem(comentario));
-                                rVChat.smoothScrollToPosition(groupieAdapter.getItemCount());
+                                binding.rVChat.smoothScrollToPosition(groupieAdapter
+                                        .getItemCount());
                             }
                         }
                     });
@@ -204,9 +197,9 @@ public class TelaChat extends AppCompatActivity implements View.OnClickListener 
     }
 
     private void sendMessage(String fromId) {
-        String texto = editTChat.getText().toString().trim();
+        String texto = binding.editTChat.getText().toString().trim();
 
-        editTChat.setText(null);
+        binding.editTChat.setText(null);
 
         assert fromId != null;
         if (!fromId.equals(usuarioID))
@@ -226,13 +219,15 @@ public class TelaChat extends AppCompatActivity implements View.OnClickListener 
                     .collection("ordensDeServicos").document(idServico)
                     .collection("comentarios").document(fromId).collection(toId)
                     .add(comentario)
-                    .addOnSuccessListener(documentReference -> Log.d("Ver", documentReference.getId()))
+                    .addOnSuccessListener(documentReference -> Log.d("Ver", documentReference
+                            .getId()))
                     .addOnFailureListener(e -> Log.e("Ver1", e.getMessage(), e));
             db.collection("usuarios").document(usuarioID)
                     .collection("ordensDeServicos").document(idServico)
                     .collection("comentarios").document(toId).collection(fromId)
                     .add(comentario)
-                    .addOnSuccessListener(documentReference -> Log.d("Ver", documentReference.getId()))
+                    .addOnSuccessListener(documentReference -> Log.d("Ver", documentReference
+                            .getId()))
                     .addOnFailureListener(e -> Log.e("Ver1", e.getMessage(), e));
         } else
             Toast.makeText(this, "Não é possível enviar mensagem vazia",
@@ -256,8 +251,8 @@ public class TelaChat extends AppCompatActivity implements View.OnClickListener 
             TextView txtDataEnvio = groupieViewHolder.itemView.findViewById(R.id.txtdataEnvio);
             if (getLayout() == R.layout.item_from_message) {
                 if (cliente != null)
-                    txtAutor.setText(cliente.substring(0, 1).toUpperCase().concat(cliente.substring(1)
-                            .toLowerCase()));
+                    txtAutor.setText(cliente.substring(0, 1).toUpperCase().concat(cliente
+                            .substring(1).toLowerCase()));
                 else
                     txtAutor.setText("Suporte");
             }

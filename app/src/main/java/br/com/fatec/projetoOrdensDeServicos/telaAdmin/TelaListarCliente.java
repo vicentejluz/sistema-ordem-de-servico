@@ -5,29 +5,30 @@ import androidx.fragment.app.Fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.view.View;
 
 import br.com.fatec.projetoOrdensDeServicos.R;
+import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityListarClienteBinding;
 import br.com.fatec.projetoOrdensDeServicos.fragment.SelecionarStatusClienteFragment;
 import br.com.fatec.projetoOrdensDeServicos.fragment.TodosClientesFragment;
 
 public class TelaListarCliente extends AppCompatActivity {
-    BottomNavigationView bNVStatusConta;
+    ActivityListarClienteBinding binding;
     Bundle statusConta = new Bundle();
 
     @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listar_cliente);
-        bNVStatusConta = findViewById(R.id.bNVStatusConta);
+        binding = ActivityListarClienteBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
         if (savedInstanceState == null) {
             LoadFragment(new TodosClientesFragment());
         }
 
-        bNVStatusConta.setOnItemSelectedListener(item -> {
+        binding.bNVStatusConta.setOnItemSelectedListener(item -> {
             Fragment selecionarfragmento = null;
             switch (item.getItemId()) {
                 case R.id.itmTodos:

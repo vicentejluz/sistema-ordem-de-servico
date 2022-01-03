@@ -6,30 +6,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
+import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityRecuperarSenhaBinding;
+
 public class TelaRecuperarSenha extends AppCompatActivity implements View.OnClickListener {
-    private TextInputEditText txtEmail;
-    private Button btnRecuperarSenha;
+    private ActivityRecuperarSenhaBinding binding;
     private FirebaseAuth autenticacao;
-    private ProgressBar pBCarregar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recuperar_senha);
-        txtEmail = findViewById(R.id.txtEmail);
-        btnRecuperarSenha = findViewById(R.id.btnRecuperarSenha);
-        pBCarregar = findViewById(R.id.pBCarregar);
+        binding = ActivityRecuperarSenhaBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
         autenticacao = FirebaseAuth.getInstance();
-        btnRecuperarSenha.setOnClickListener(this);
+        binding.btnRecuperarSenha.setOnClickListener(this);
     }
 
     @Override
@@ -38,7 +34,8 @@ public class TelaRecuperarSenha extends AppCompatActivity implements View.OnClic
     }
 
     private void recuperarSenha() {
-        String email = Objects.requireNonNull(txtEmail.getText()).toString().trim();
+        String email = Objects.requireNonNull(binding.txtEmail.getText())
+                .toString().trim();
 
         if (email.isEmpty()) {
             Toast.makeText(this, "ERRO - Preencha o campo E-mail",
@@ -51,8 +48,8 @@ public class TelaRecuperarSenha extends AppCompatActivity implements View.OnClic
     private void enviarEmail(String email) {
         autenticacao.sendPasswordResetEmail(email)
                 .addOnSuccessListener(unused -> {
-                    pBCarregar.setVisibility(View.VISIBLE);
-                    btnRecuperarSenha.setEnabled(false);
+                    binding.pBCarregar.setVisibility(View.VISIBLE);
+                    binding.btnRecuperarSenha.setEnabled(false);
                     new Handler().postDelayed(() -> {
                         Toast.makeText(TelaRecuperarSenha.this,
                                 "Email de recuperação de senha enviado",

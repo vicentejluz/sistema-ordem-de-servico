@@ -10,11 +10,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
@@ -26,45 +23,40 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityCadastroBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.Cliente;
 import br.com.fatec.projetoOrdensDeServicos.util.Mascara;
 
 public class TelaCadastro extends AppCompatActivity implements View.OnClickListener {
-    private TextInputEditText txtNome, txtTel, txtEmail, txtSenha, txtConfirmarSenha;
-    private Button btnCadastrar;
     private Cliente cliente;
     private FirebaseAuth cadastrar;
     private FirebaseFirestore db;
     private Map<String, Object> data;
     private String usuarioID;
-    private ProgressBar pBCarregar;
+    private ActivityCadastroBinding binding;
     private static final String TAG = "Cadastro";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).hide();
-        setContentView(R.layout.activity_cadastro);
-        pBCarregar = findViewById(R.id.pBCarregar);
-        txtNome = findViewById(R.id.txtNome);
-        txtTel = findViewById(R.id.txtTel);
-        txtEmail = findViewById(R.id.txtEmail);
-        txtSenha = findViewById(R.id.txtSenha);
-        txtConfirmarSenha = findViewById(R.id.txtConfirmarSenha);
-        btnCadastrar = findViewById(R.id.btnCadastrar);
+        binding = ActivityCadastroBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
         cadastrar = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         data = new HashMap<>();
-        btnCadastrar.setOnClickListener(this);
-        txtTel.addTextChangedListener(Mascara.insert(Mascara.MaskType.TEL, txtTel));
+        binding.btnCadastrar.setOnClickListener(this);
+        binding.txtTel.addTextChangedListener(Mascara.insert(Mascara.MaskType.TEL, binding.txtTel));
     }
 
     private void registrarUsuario() {
-        String nome = Objects.requireNonNull(txtNome.getText()).toString().trim();
-        String telefone = Objects.requireNonNull(txtTel.getText()).toString().trim();
-        String email = Objects.requireNonNull(txtEmail.getText()).toString().trim();
-        String senha = Objects.requireNonNull(txtSenha.getText()).toString().trim();
-        String confirmarSenha = Objects.requireNonNull(txtConfirmarSenha.getText()).toString().trim();
+        String nome = Objects.requireNonNull(binding.txtNome.getText()).toString().trim();
+        String telefone = Objects.requireNonNull(binding.txtTel.getText()).toString().trim();
+        String email = Objects.requireNonNull(binding.txtEmail.getText()).toString().trim();
+        String senha = Objects.requireNonNull(binding.txtSenha.getText()).toString().trim();
+        String confirmarSenha = Objects.requireNonNull(binding.txtConfirmarSenha.getText())
+                .toString().trim();
         String privilegio = "Cliente";
         String statusConta = "Desbloqueado";
         cliente = new Cliente(nome, email, telefone, statusConta);
@@ -97,17 +89,18 @@ public class TelaCadastro extends AppCompatActivity implements View.OnClickListe
                                             .addOnSuccessListener(unused ->
                                                     Log.d(TAG, "ID gerado: " + docRef.getId()))
                                             .addOnFailureListener(e ->
-                                                    Log.w(TAG, "Erro ao adicionar o documento", e));
+                                                    Log.w(TAG, "Erro ao adicionar o documento",
+                                                            e));
 
-                                    pBCarregar.setVisibility(View.VISIBLE);
-                                    btnCadastrar.setEnabled(false);
+                                    binding.pBCarregar.setVisibility(View.VISIBLE);
+                                    binding.btnCadastrar.setEnabled(false);
                                     new Handler().postDelayed(() -> {
                                         Toast.makeText(TelaCadastro.this,
                                                 "Registrado com sucesso:"
-                                                        + cliente.getEmail(), Toast.LENGTH_LONG).show();
+                                                        + cliente.getEmail(), Toast.LENGTH_LONG)
+                                                .show();
                                         FirebaseAuth.getInstance().signOut();
-                                        Intent intent = new
-                                                Intent(TelaCadastro.this,
+                                        Intent intent = new Intent(TelaCadastro.this,
                                                 TelaLogin.class);
                                         startActivity(intent);
                                         finish();
@@ -142,10 +135,10 @@ public class TelaCadastro extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(@NonNull View v) {
-        InputMethodManager inputManager = (InputMethodManager) this
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(v.getWindowToken(),
-                InputMethodManager.HIDE_NOT_ALWAYS);
+        InputMethodManager inputManager = (InputMethodManager) this.getSystemService(Context
+                .INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager
+                .HIDE_NOT_ALWAYS);
         registrarUsuario();
     }
 }

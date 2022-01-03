@@ -1,5 +1,6 @@
 package br.com.fatec.projetoOrdensDeServicos.telaCliente;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,12 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,29 +20,24 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.Objects;
 
-import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.TelaLogin;
+import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityConfirmacaoExcluirContaBinding;
 
 public class TelaConfirmacaoExcluirConta extends AppCompatActivity implements View.OnClickListener {
-    private TextInputEditText txtSenha;
-    private TextInputLayout txtInputLayout1;
-    private Button btnExcluir;
-    private ProgressBar pBCarregar;
     private final FirebaseFirestore DB = FirebaseFirestore.getInstance();
     private String usuarioID;
     private FirebaseUser usuario;
+    private ActivityConfirmacaoExcluirContaBinding binding;
     private final String IDCHAT = "pb6IdWjCKogMvZlnpH4bl13lCM22AD";
     private static final String TAG = "Confirmação de Excluir";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_confirmacao_excluir_conta);
-        txtSenha = findViewById(R.id.txtSenha);
-        btnExcluir = findViewById(R.id.btnExcluir);
-        pBCarregar = findViewById(R.id.pBCarregar);
-        txtInputLayout1 = findViewById(R.id.txtInputLayout1);
-        btnExcluir.setOnClickListener(this);
+        binding = ActivityConfirmacaoExcluirContaBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        binding.btnExcluir.setOnClickListener(this);
         usuario = FirebaseAuth.getInstance().getCurrentUser();
         usuarioID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
     }
@@ -58,9 +50,9 @@ public class TelaConfirmacaoExcluirConta extends AppCompatActivity implements Vi
     public void excluirConta() {
         Intent intent = getIntent();
         String nome = intent.getStringExtra("chaveNome");
-        String senha = Objects.requireNonNull(txtSenha.getText()).toString().trim();
+        String senha = Objects.requireNonNull(binding.txtSenha.getText()).toString().trim();
         if (senha.isEmpty()) {
-            txtInputLayout1.setError("ERRO - Preencha o campo");
+            binding.txtInputLayout1.setError("ERRO - Preencha o campo");
         } else {
             AuthCredential credential = EmailAuthProvider
                     .getCredential(Objects.requireNonNull(usuario.getEmail()), senha);
@@ -70,8 +62,8 @@ public class TelaConfirmacaoExcluirConta extends AppCompatActivity implements Vi
                             confirmarExclusao(nome);
                             Log.d(TAG, "Usuário reautenticado.");
                         } else {
-                            txtInputLayout1.setError("Senha inválida");
-                            Objects.requireNonNull(txtSenha.getText()).clear();
+                            binding.txtInputLayout1.setError("Senha inválida");
+                            Objects.requireNonNull(binding.txtSenha.getText()).clear();
                         }
                     });
         }
@@ -122,15 +114,13 @@ public class TelaConfirmacaoExcluirConta extends AppCompatActivity implements Vi
                         tarefaDoc -> {
                             if (tarefaDoc.isSuccessful()) {
                                 Log.d(TAG, "Documento deletado com sucesso!");
-                                pBCarregar.setVisibility(View.VISIBLE);
-                                btnExcluir.setEnabled(false);
+                                binding.pBCarregar.setVisibility(View.VISIBLE);
+                                binding.btnExcluir.setEnabled(false);
                                 new Handler().postDelayed(() -> {
-                                    Toast.makeText(
-                                            TelaConfirmacaoExcluirConta.this,
-                                            "Conta deletada com sucesso",
-                                            Toast.LENGTH_LONG).show();
-                                    Intent intent = new Intent(this,
-                                            TelaLogin.class);
+                                    Toast.makeText(TelaConfirmacaoExcluirConta.this,
+                                            "Conta deletada com sucesso", Toast.LENGTH_LONG)
+                                            .show();
+                                    Intent intent = new Intent(this, TelaLogin.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
                                     finish();
@@ -139,13 +129,12 @@ public class TelaConfirmacaoExcluirConta extends AppCompatActivity implements Vi
                         }))
                 .addOnFailureListener(e -> {
                     Log.w(TAG, "Erro ao deletar documento!", e);
-                    Toast.makeText(
-                            this, "Erro ao deletar conta!",
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Erro ao deletar conta!", Toast.LENGTH_LONG)
+                            .show();
                 });
     }
 
-    private void ExcluirComentario(QueryDocumentSnapshot documento) {
+    private void ExcluirComentario(@NonNull QueryDocumentSnapshot documento) {
         DB.collection("usuarios").document(usuarioID)
                 .collection("ordensDeServicos")
                 .document(documento.getId())

@@ -1,16 +1,14 @@
 package br.com.fatec.projetoOrdensDeServicos.telaAdmin;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.TooltipCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
+
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,20 +16,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.TelaLogin;
 
-public class TelaMenuAdmin extends AppCompatActivity implements View.OnClickListener {
+import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityMenuAdminBinding;
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+public class TelaMenuAdmin extends AppCompatActivity implements View.OnClickListener {
+    ActivityMenuAdminBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_admin);
-        Button btnListarCliente = findViewById(R.id.btnListarCliente);
-        Button btnConsultarServico = findViewById(R.id.btnConsultarServico);
-        ImageButton btnSair = findViewById(R.id.btnSair);
-        btnSair.setTooltipText("Deslogar");
-        btnSair.setOnClickListener(this);
-        btnListarCliente.setOnClickListener(this);
-        btnConsultarServico.setOnClickListener(this);
+        binding = ActivityMenuAdminBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        TooltipCompat.setTooltipText(binding.btnSair, "Deslogar");
+        binding.btnSair.setOnClickListener(this);
+        binding.btnListarCliente.setOnClickListener(this);
+        binding.btnConsultarServico.setOnClickListener(this);
     }
 
     @SuppressLint("NonConstantResourceId")

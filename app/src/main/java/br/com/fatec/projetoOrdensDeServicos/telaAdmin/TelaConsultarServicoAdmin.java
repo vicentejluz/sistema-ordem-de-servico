@@ -5,17 +5,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -30,6 +27,7 @@ import java.util.Objects;
 import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.TelaChat;
 import br.com.fatec.projetoOrdensDeServicos.adapter.OrdemServicoAdminAdapter;
+import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityConsultarBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.OrdemServico;
 import br.com.fatec.projetoOrdensDeServicos.entity.StatusOrdemServico;
 
@@ -38,13 +36,11 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
     private ArrayList<OrdemServico> ordemServicos;
     private ArrayList<String> clientes, usuarioID, getStatus;
     private ArrayList<Double> getPrecos;
-    private TextView txtTotalPreco, tVTotalPreco;
+    private ActivityConsultarBinding binding;
     private final Locale LOCALE = new Locale("pt", "BR");
     private OrdemServicoAdminAdapter ordemServicoAdminAdapter;
-    BottomNavigationView bNVStatus;
     private boolean isStatus;
-    Double preco = 0.0, getPreco = 0.0;
-    RecyclerView rVConsultarServico;
+    private Double preco = 0.0, getPreco = 0.0;
     private String ordemServicoID, statusServico;
     private final String IDCHAT = "pb6IdWjCKogMvZlnpH4bl13lCM22AD";
     private OrdemServicoAdminAdapter.OrdemServicoAdminClickListener ordemServicoAdminClickListener;
@@ -55,15 +51,13 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_consultar);
-        rVConsultarServico = findViewById(R.id.rVConsultar);
-        bNVStatus = findViewById(R.id.bNVStatus);
-        tVTotalPreco = findViewById(R.id.tVTotalPreco);
-        txtTotalPreco = findViewById(R.id.txtTotalPreco);
-        bNVStatus.getMenu().clear();
-        bNVStatus.inflateMenu(R.menu.menu_item_bottom_servico);
-        rVConsultarServico.setHasFixedSize(true);
-        rVConsultarServico.setLayoutManager(new LinearLayoutManager(this));
+        binding = ActivityConsultarBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        binding.bNVStatus.getMenu().clear();
+        binding.bNVStatus.inflateMenu(R.menu.menu_item_bottom_servico);
+        binding.rVConsultar.setHasFixedSize(true);
+        binding.rVConsultar.setLayoutManager(new LinearLayoutManager(this));
         db = FirebaseFirestore.getInstance();
         ordemServicos = new ArrayList<>();
         clientes = new ArrayList<>();
@@ -76,9 +70,9 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
         ordemServicoAdminAdapter = new OrdemServicoAdminAdapter(this, ordemServicos, clientes,
                 ordemServicoAdminClickListener, excluirOrdemServicoClickListener,
                 chatServicoClickListener);
-        rVConsultarServico.setAdapter(ordemServicoAdminAdapter);
+        binding.rVConsultar.setAdapter(ordemServicoAdminAdapter);
 
-        bNVStatus.setOnItemSelectedListener(item -> {
+        binding.bNVStatus.setOnItemSelectedListener(item -> {
             limparListas();
             setarVisibilidadeTextView(View.VISIBLE);
             switch (item.getItemId()) {
@@ -105,7 +99,7 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        bNVStatus.setSelectedItemId(R.id.itmTodos);
+        binding.bNVStatus.setSelectedItemId(R.id.itmTodos);
     }
 
     private void limparListas() {
@@ -116,8 +110,8 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
     }
 
     private void setarVisibilidadeTextView(int visibilidade) {
-        tVTotalPreco.setVisibility(visibilidade);
-        txtTotalPreco.setVisibility(visibilidade);
+        binding.tVTotalPreco.setVisibility(visibilidade);
+        binding.txtTotalPreco.setVisibility(visibilidade);
     }
 
     private void confirmarExcluirOrderServico() {
@@ -243,7 +237,7 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
             preco += p;
         if (preco != null) {
             getPreco = preco;
-            txtTotalPreco.setText(NumberFormat.getCurrencyInstance(LOCALE).format(getPreco));
+            binding.txtTotalPreco.setText(NumberFormat.getCurrencyInstance(LOCALE).format(getPreco));
             preco = 0.0;
         }
     }
@@ -268,9 +262,9 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
                                 Toast.LENGTH_LONG).show();
                         getPreco = getPreco - ordemServicos.get(position).getPreco();
                         if(!isStatus)
-                            bNVStatus.setSelectedItemId(R.id.itmFinalizada);
+                            binding.bNVStatus.setSelectedItemId(R.id.itmFinalizada);
                         else
-                            bNVStatus.setSelectedItemId(R.id.itmTodos);
+                            binding.bNVStatus.setSelectedItemId(R.id.itmTodos);
                     } else {
                         Log.d("ERROR:", "Erro ao achar documento: ",
                                 task.getException());

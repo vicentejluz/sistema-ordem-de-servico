@@ -11,11 +11,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,38 +20,33 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
+import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityLoginBinding;
 import br.com.fatec.projetoOrdensDeServicos.telaAdmin.TelaMenuAdmin;
 import br.com.fatec.projetoOrdensDeServicos.telaCliente.TelaMenuCliente;
 
 public class TelaLogin extends AppCompatActivity implements View.OnClickListener {
-    private TextInputEditText txtEmail, txtSenha;
-    private Button btnEntrar, btnCadastro, btnRecuperarSenha;
     private String email, privilegio, statusConta;
     private FirebaseAuth autenticacao;
     private final FirebaseFirestore DB = FirebaseFirestore.getInstance();
+    private ActivityLoginBinding binding;
     private static final String TAG = "Login";
-    private ProgressBar pBCarregar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Objects.requireNonNull(getSupportActionBar()).hide();
-        setContentView(R.layout.activity_login);
-        pBCarregar = findViewById(R.id.pBCarregar);
-        txtEmail = findViewById(R.id.txtEmail);
-        txtSenha = findViewById(R.id.txtSenha);
-        btnRecuperarSenha = findViewById(R.id.btnRecuperarSenha);
-        btnCadastro = findViewById(R.id.btnCadastro);
-        btnEntrar = findViewById(R.id.btnEntrar);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
         autenticacao = FirebaseAuth.getInstance();
-        btnRecuperarSenha.setOnClickListener(this);
-        btnCadastro.setOnClickListener(this);
-        btnEntrar.setOnClickListener(this);
+        binding.btnRecuperarSenha.setOnClickListener(this);
+        binding.btnCadastro.setOnClickListener(this);
+        binding.btnEntrar.setOnClickListener(this);
     }
 
     private void logarUsuario() {
-        email = Objects.requireNonNull(txtEmail.getText()).toString().trim();
-        String senha = Objects.requireNonNull(txtSenha.getText()).toString().trim();
+        email = Objects.requireNonNull(binding.txtEmail.getText()).toString().trim();
+        String senha = Objects.requireNonNull(binding.txtSenha.getText()).toString().trim();
         if (email.isEmpty() || senha.isEmpty()) {
             Toast.makeText(TelaLogin.this, "ERRO - Preencha todos os campos",
                     Toast.LENGTH_LONG).show();
@@ -74,13 +66,16 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
                                                 privilegio = document.getString("privilegio");
                                                 statusConta = document.getString("statusConta");
                                                 assert statusConta != null;
-                                                if (statusConta.equalsIgnoreCase("Bloqueado")) {
-                                                    Toast.makeText(TelaLogin.this, "Usuário " +
-                                                            "Bloqueado", Toast.LENGTH_LONG).show();
+                                                if (statusConta.equalsIgnoreCase(
+                                                        "Bloqueado")) {
+                                                    Toast.makeText(TelaLogin.this,
+                                                            "Usuário Bloqueado", Toast
+                                                                    .LENGTH_LONG).show();
                                                     FirebaseAuth.getInstance().signOut();
                                                 } else {
                                                     assert privilegio != null;
-                                                    if (privilegio.equalsIgnoreCase("Cliente")) {
+                                                    if (privilegio.equalsIgnoreCase(
+                                                            "Cliente")) {
                                                         mudancaActivity(TelaMenuCliente.class);
                                                     } else {
                                                         mudancaActivity(TelaMenuAdmin.class);
@@ -90,7 +85,8 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
                                                 Log.d(TAG, "No such document");
                                             }
                                         } else {
-                                            Log.d(TAG, "get failed with ", task1.getException());
+                                            Log.d(TAG, "get failed with ", task1
+                                                    .getException());
                                         }
                                     });
 
@@ -129,28 +125,28 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
     }
 
     public void telaCadastro() {
-        Objects.requireNonNull(txtEmail.getText()).clear();
-        Objects.requireNonNull(txtSenha.getText()).clear();
-        txtEmail.clearFocus();
-        txtSenha.clearFocus();
+        Objects.requireNonNull(binding.txtEmail.getText()).clear();
+        Objects.requireNonNull(binding.txtSenha.getText()).clear();
+        binding.txtEmail.clearFocus();
+        binding.txtSenha.clearFocus();
         Intent intent = new Intent(this, TelaCadastro.class);
         startActivity(intent);
     }
 
     public void telarecuperarSenha() {
-        Objects.requireNonNull(txtEmail.getText()).clear();
-        Objects.requireNonNull(txtSenha.getText()).clear();
-        txtEmail.clearFocus();
-        txtSenha.clearFocus();
+        Objects.requireNonNull(binding.txtEmail.getText()).clear();
+        Objects.requireNonNull(binding.txtSenha.getText()).clear();
+        binding.txtEmail.clearFocus();
+        binding.txtSenha.clearFocus();
         Intent intent = new Intent(this, TelaRecuperarSenha.class);
         startActivity(intent);
     }
 
     public void mudancaActivity(Class<?> tela) {
-        pBCarregar.setVisibility(View.VISIBLE);
-        btnEntrar.setEnabled(false);
-        btnCadastro.setEnabled(false);
-        btnRecuperarSenha.setEnabled(false);
+        binding.pBCarregar.setVisibility(View.VISIBLE);
+        binding.btnEntrar.setEnabled(false);
+        binding.btnCadastro.setEnabled(false);
+        binding.btnRecuperarSenha.setEnabled(false);
         new Handler().postDelayed(() -> {
             Toast.makeText(TelaLogin.this, "Logado com sucesso: " + email,
                     Toast.LENGTH_LONG).show();

@@ -10,12 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,6 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import br.com.fatec.projetoOrdensDeServicos.R;
+import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityInformacaoServicoAdminBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.OrdemServico;
 import br.com.fatec.projetoOrdensDeServicos.entity.StatusOrdemServico;
 import br.com.fatec.projetoOrdensDeServicos.util.MascaraMonetaria;
@@ -45,9 +43,7 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
     private final Locale LOCALE = new Locale("pt", "BR");
     private final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy",
             LOCALE);
-    private TextInputEditText txtNomeServico, txtDescricao, txtPreco, txtDataAbertura;
-    private Spinner txtStatus;
-    private TextInputEditText txtDataFinalizacao;
+    private ActivityInformacaoServicoAdminBinding binding;
     private FirebaseFirestore db;
     private Double preco;
     private Map<String, Object> data;
@@ -65,24 +61,18 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_informacao_servico_admin);
-        txtNomeServico = findViewById(R.id.txtNomeServico);
-        txtDescricao = findViewById(R.id.txtDescricao);
-        txtDataAbertura = findViewById(R.id.txtDataAbertura);
-        txtPreco = findViewById(R.id.txtPreco);
-        txtDataFinalizacao = findViewById(R.id.txtDataFinal);
-        txtStatus = findViewById(R.id.txtStatus);
-        Button btnAtualizar = findViewById(R.id.btnAtualizar);
-        btnAtualizar.setOnClickListener(this);
-        txtStatus.setOnItemSelectedListener(this);
-        txtPreco.addTextChangedListener(new MascaraMonetaria(txtPreco, LOCALE));
+        binding = ActivityInformacaoServicoAdminBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        binding.btnAtualizar.setOnClickListener(this);
+        binding.txtStatus.setOnItemSelectedListener(this);
+        binding.txtPreco.addTextChangedListener(new MascaraMonetaria(binding.txtPreco, LOCALE));
         db = FirebaseFirestore.getInstance();
         arrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item,
                 statusServicos) {
             @Override
             public boolean isEnabled(int position) {
-                if (status.equals(StatusOrdemServico.CANCELADA
-                        .toString())) {
+                if (status.equals(StatusOrdemServico.CANCELADA.name())) {
                     if (position == 3)
                         return false;
                     if (position == 0)
@@ -125,7 +115,7 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
         };
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        txtStatus.setAdapter(arrayAdapter);
+        binding.txtStatus.setAdapter(arrayAdapter);
         data = new HashMap<>();
         dadosItemLista();
     }
@@ -178,22 +168,22 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
         if (ordemServico.getDatafinalizacao() != null)
             dataFinalizacao = SIMPLE_DATE_FORMAT.format(ordemServico.getDatafinalizacao().toDate());
 
-        txtNomeServico.setText(ordemServico.getNomeServico().substring(0, 1).toUpperCase()
+        binding.txtNomeServico.setText(ordemServico.getNomeServico().substring(0, 1).toUpperCase()
                 .concat(ordemServico.getNomeServico().substring(1)));
-        txtDescricao.setText(ordemServico.getDescricao().substring(0, 1).toUpperCase()
+        binding.txtDescricao.setText(ordemServico.getDescricao().substring(0, 1).toUpperCase()
                 .concat(ordemServico.getDescricao().substring(1)));
-        txtPreco.setText(decimalFormat.format(ordemServico.getPreco()));
+        binding.txtPreco.setText(decimalFormat.format(ordemServico.getPreco()));
 
-        txtDataAbertura.setText(dataAbertura);
-        txtDataFinalizacao.setText(dataFinalizacao);
+        binding.txtDataAbertura.setText(dataAbertura);
+        binding.txtDataFinal.setText(dataFinalizacao);
         if (status.equals("-"))
-            txtStatus.setSelection(0);
+            binding.txtStatus.setSelection(0);
         else if (status.equals(StatusOrdemServico.ABERTA.name()))
-            txtStatus.setSelection(1);
+            binding.txtStatus.setSelection(1);
         else if (status.equals(StatusOrdemServico.CANCELADA.name()))
-            txtStatus.setSelection(2);
+            binding.txtStatus.setSelection(2);
         else
-            txtStatus.setSelection(3);
+            binding.txtStatus.setSelection(3);
     }
 
     private void dadosItemLista() {
@@ -207,27 +197,28 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
     }
 
     private void status() {
-        if (txtStatus.getSelectedItem().toString().equals("AGUARDANDO APROVAÇÃO")) {
-            txtStatus.setEnabled(false);
+        if (binding.txtStatus.getSelectedItem().toString().equals("AGUARDANDO APROVAÇÃO")) {
+            binding.txtStatus.setEnabled(false);
         } else {
-            if (txtStatus.getSelectedItem().toString().equals(StatusOrdemServico.ABERTA.name())) {
-                txtPreco.setFocusable(false);
-                txtPreco.setCursorVisible(false);
+            if (binding.txtStatus.getSelectedItem().toString().equals(StatusOrdemServico.ABERTA
+                    .name())) {
+                binding.txtPreco.setFocusable(false);
+                binding.txtPreco.setCursorVisible(false);
             } else {
-                if (txtStatus.getSelectedItem().toString().equals(StatusOrdemServico.FINALIZADA
-                        .name())) {
-                    txtStatus.setEnabled(false);
-                    txtDescricao.setFocusable(false);
-                    txtDescricao.setCursorVisible(false);
-                    txtPreco.setFocusable(false);
-                    txtPreco.setCursorVisible(false);
+                if (binding.txtStatus.getSelectedItem().toString().equals(StatusOrdemServico
+                        .FINALIZADA.name())) {
+                    binding.txtStatus.setEnabled(false);
+                    binding.txtDescricao.setFocusable(false);
+                    binding.txtDescricao.setCursorVisible(false);
+                    binding.txtPreco.setFocusable(false);
+                    binding.txtPreco.setCursorVisible(false);
                 } else {
-                    if (txtStatus.getSelectedItem().toString().equals(StatusOrdemServico.CANCELADA
-                            .name())) {
-                        txtDescricao.setFocusable(false);
-                        txtDescricao.setCursorVisible(false);
-                        txtPreco.setFocusableInTouchMode(true);
-                        txtPreco.setCursorVisible(true);
+                    if (binding.txtStatus.getSelectedItem().toString().equals(StatusOrdemServico
+                            .CANCELADA.name())) {
+                        binding.txtDescricao.setFocusable(false);
+                        binding.txtDescricao.setCursorVisible(false);
+                        binding.txtPreco.setFocusableInTouchMode(true);
+                        binding.txtPreco.setCursorVisible(true);
                     }
                 }
             }
@@ -236,7 +227,7 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        item = txtStatus.getSelectedItem().toString();
+        item = binding.txtStatus.getSelectedItem().toString();
     }
 
     @Override
@@ -246,7 +237,7 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
 
     private void atualizarServico(@NonNull String item) {
         Timestamp timestamp = Timestamp.now();
-        String conStringPreco = Objects.requireNonNull(txtPreco.getText()).toString()
+        String conStringPreco = Objects.requireNonNull(binding.txtPreco.getText()).toString()
                 .replaceAll("[^0-9,]", "").replace(",", ".");
         ordemServico.setPreco(Double.valueOf(conStringPreco));
         if ((item.equals(StatusOrdemServico.CANCELADA.name())) &&
@@ -267,7 +258,8 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
                 item = "-";
             if (!status.equals(item))
                 data.put("status", item);
-            ordemServico.setDescricao(Objects.requireNonNull(txtDescricao.getText()).toString().trim());
+            ordemServico.setDescricao(Objects.requireNonNull(binding.txtDescricao.getText())
+                    .toString().trim());
             if (!descricao.equals(ordemServico.getDescricao()))
                 data.put("descricao", ordemServico.getDescricao());
             if (!preco.equals(ordemServico.getPreco()))
@@ -279,8 +271,8 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
             docRef.update(data);
             Toast.makeText(this, "Atualizado com sucesso!!",
                     Toast.LENGTH_LONG).show();
-            txtPreco.clearFocus();
-            txtDescricao.clearFocus();
+            binding.txtPreco.clearFocus();
+            binding.txtDescricao.clearFocus();
             onStart();
         }
     }

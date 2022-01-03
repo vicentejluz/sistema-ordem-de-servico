@@ -13,12 +13,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,11 +26,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Objects;
 
 import br.com.fatec.projetoOrdensDeServicos.R;
+import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityConfigContaBinding;
+import br.com.fatec.projetoOrdensDeServicos.databinding.DialogSenhaBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.Cliente;
 import br.com.fatec.projetoOrdensDeServicos.util.Mascara;
 
 public class TelaConfigConta extends AppCompatActivity implements View.OnClickListener {
-    private TextInputEditText txtNome, txtTel, txtEmail;
+    private ActivityConfigContaBinding binding;
+    private DialogSenhaBinding dialogBinding;
     private String nome;
     private Cliente cliente;
     private final FirebaseFirestore DB = FirebaseFirestore.getInstance();
@@ -47,17 +46,13 @@ public class TelaConfigConta extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_config_conta);
-        txtNome = findViewById(R.id.txtNome);
-        txtTel = findViewById(R.id.txtTel);
-        txtEmail = findViewById(R.id.txtEmail);
-        Button btnEditar = findViewById(R.id.btnEditar);
-        Button btnAlterarSenha = findViewById(R.id.btnAlterarSenha);
-        Button btnExcluir = findViewById(R.id.btnExcluir);
-        btnExcluir.setOnClickListener(this);
-        btnEditar.setOnClickListener(this);
-        btnAlterarSenha.setOnClickListener(this);
-        txtTel.addTextChangedListener(Mascara.insert(Mascara.MaskType.TEL, txtTel));
+        binding = ActivityConfigContaBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        binding.btnExcluir.setOnClickListener(this);
+        binding.btnEditar.setOnClickListener(this);
+        binding.btnAlterarSenha.setOnClickListener(this);
+        binding.txtTel.addTextChangedListener(Mascara.insert(Mascara.MaskType.TEL, binding.txtTel));
     }
 
     @Override
@@ -67,9 +62,9 @@ public class TelaConfigConta extends AppCompatActivity implements View.OnClickLi
         DocumentReference docRef = DB.collection("usuarios").document(usuarioID);
         docRef.addSnapshotListener((documentSnapshot, error) -> {
             if (documentSnapshot != null) {
-                txtEmail.setText(USUARIO.getEmail());
-                txtNome.setText(documentSnapshot.getString("nome"));
-                txtTel.setText(documentSnapshot.getString("telefone"));
+                binding.txtEmail.setText(USUARIO.getEmail());
+                binding.txtNome.setText(documentSnapshot.getString("nome"));
+                binding.txtTel.setText(documentSnapshot.getString("telefone"));
                 getNome = documentSnapshot.getString("nome");
                 getTelefone = documentSnapshot.getString("telefone");
                 getEmail = USUARIO.getEmail();
@@ -125,19 +120,17 @@ public class TelaConfigConta extends AppCompatActivity implements View.OnClickLi
 
     private void validandoUsuario() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        View view = getLayoutInflater().inflate(R.layout.dialog_senha, null);
+        dialogBinding = DialogSenhaBinding.inflate(getLayoutInflater());
+        View view = dialogBinding.getRoot();
         builder.setTitle("Digite sua Senha:");
         builder.setView(view);
-        TextInputLayout txtInputLayout1 = view.findViewById(R.id.txtInputLayout1);
-        TextInputEditText txtSenha = view.findViewById(R.id.txtSenha);
-        Button btnConfirmar = view.findViewById(R.id.btnConfirmar);
-        TextView txtCancelar = view.findViewById(R.id.txtCancelar);
         Dialog alterarPerfil = builder.create();
         alterarPerfil.create();
-        btnConfirmar.setOnClickListener(v1 -> {
-            confimarSenha = Objects.requireNonNull(txtSenha.getText()).toString().trim();
+        dialogBinding.btnConfirmar.setOnClickListener(v1 -> {
+            confimarSenha = Objects.requireNonNull(dialogBinding.txtSenha.getText()).toString()
+                    .trim();
             if (confimarSenha.isEmpty()) {
-                txtInputLayout1.setError("Preencha o campo");
+                dialogBinding.txtInputLayout1.setError("Preencha o campo");
             } else {
                 AuthCredential credential = EmailAuthProvider
                         .getCredential(Objects.requireNonNull(USUARIO.getEmail()), confimarSenha);
@@ -148,13 +141,13 @@ public class TelaConfigConta extends AppCompatActivity implements View.OnClickLi
                                 Log.d(TAG, "Usuário reautenticado.");
                                 alterarPerfil.dismiss();
                             } else {
-                                txtInputLayout1.setError("Senha inválida");
-                                Objects.requireNonNull(txtSenha.getText()).clear();
+                                dialogBinding.txtInputLayout1.setError("Senha inválida");
+                                Objects.requireNonNull(dialogBinding.txtSenha.getText()).clear();
                             }
                         });
             }
         });
-        txtCancelar.setOnClickListener(v12 -> {
+        dialogBinding.txtCancelar.setOnClickListener(v12 -> {
             alterarPerfil.dismiss();
             onStart();
         });
@@ -163,9 +156,9 @@ public class TelaConfigConta extends AppCompatActivity implements View.OnClickLi
     }
 
     private void ConfirmarAlteracao() {
-        nome = Objects.requireNonNull(txtNome.getText()).toString().trim();
-        String telefone = Objects.requireNonNull(txtTel.getText()).toString().trim();
-        String email = Objects.requireNonNull(txtEmail.getText()).toString().trim();
+        nome = Objects.requireNonNull(binding.txtNome.getText()).toString().trim();
+        String telefone = Objects.requireNonNull(binding.txtTel.getText()).toString().trim();
+        String email = Objects.requireNonNull(binding.txtEmail.getText()).toString().trim();
         cliente = new Cliente(nome, email, telefone);
         if (cliente.getNome().isEmpty() || cliente.getEmail().isEmpty()
                 || cliente.getTelefone().isEmpty()) {
@@ -185,7 +178,8 @@ public class TelaConfigConta extends AppCompatActivity implements View.OnClickLi
                     alteraDados.setTitle("Atenção!!");
                     alteraDados.setMessage("Tem certeza que deseja alterar seu perfil?");
                     alteraDados.setCancelable(false);
-                    alteraDados.setPositiveButton("Sim", (dialogInterface, i) -> validandoUsuario());
+                    alteraDados.setPositiveButton("Sim", (dialogInterface, i) ->
+                            validandoUsuario());
                     alteraDados.setNegativeButton("Não", (dialog, which) -> onStart());
                     alteraDados.setCancelable(false);
                     alteraDados.create().show();
@@ -195,7 +189,7 @@ public class TelaConfigConta extends AppCompatActivity implements View.OnClickLi
     }
 
     public void confirmarExclucao() {
-        nome = Objects.requireNonNull(txtNome.getText()).toString().trim();
+        nome = Objects.requireNonNull(binding.txtNome.getText()).toString().trim();
         Intent intent = new Intent(this,
                 TelaConfirmacaoExcluirConta.class);
         intent.putExtra("chaveNome", nome);

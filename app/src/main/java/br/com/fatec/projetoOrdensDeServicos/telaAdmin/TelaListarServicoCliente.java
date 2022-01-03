@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -16,10 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -34,25 +31,23 @@ import java.util.Objects;
 import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.TelaChat;
 import br.com.fatec.projetoOrdensDeServicos.adapter.OrdemServicoAdminAdapter;
+import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityConsultarBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.OrdemServico;
 import br.com.fatec.projetoOrdensDeServicos.entity.StatusOrdemServico;
 
 public class TelaListarServicoCliente extends AppCompatActivity {
-
+    private ActivityConsultarBinding binding;
     private FirebaseFirestore db;
     private ArrayList<OrdemServico> ordemServicos;
     private OrdemServicoAdminAdapter ordemServicoAdminAdapter;
     private String usuarioID, cliente, statusServico;
     private ProgressDialog progressDialog;
     private Boolean isProgressDialog = true;
-    BottomNavigationView bNVStatus;
-    Double preco = 0.0, getPreco = 0.0;
-    private TextView txtTotalPreco, tVTotalPreco;
+    private Double preco = 0.0, getPreco = 0.0;
     private final Locale LOCALE = new Locale("pt", "BR");
     private ArrayList<Double> getPrecos;
     private ArrayList<String> getStatus;
-    SearchView searchView;
-    RecyclerView rVConsultarServico;
+    private SearchView searchView;
     private String ordemServicoID;
     private boolean isStatus;
     private final String IDCHAT = "pb6IdWjCKogMvZlnpH4bl13lCM22AD";
@@ -64,20 +59,18 @@ public class TelaListarServicoCliente extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_consultar);
-        rVConsultarServico = findViewById(R.id.rVConsultar);
-        bNVStatus = findViewById(R.id.bNVStatus);
-        tVTotalPreco = findViewById(R.id.tVTotalPreco);
-        txtTotalPreco = findViewById(R.id.txtTotalPreco);
-        txtTotalPreco.setText(NumberFormat.getCurrencyInstance(LOCALE).format(preco));
-        bNVStatus.getMenu().clear();
-        bNVStatus.inflateMenu(R.menu.menu_item_bottom_servico);
+        binding = ActivityConsultarBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        binding.txtTotalPreco.setText(NumberFormat.getCurrencyInstance(LOCALE).format(preco));
+        binding.bNVStatus.getMenu().clear();
+        binding.bNVStatus.inflateMenu(R.menu.menu_item_bottom_servico);
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Buscando Dados...");
         progressDialog.show();
-        rVConsultarServico.setHasFixedSize(true);
-        rVConsultarServico.setLayoutManager(new LinearLayoutManager(this));
+        binding.rVConsultar.setHasFixedSize(true);
+        binding.rVConsultar.setLayoutManager(new LinearLayoutManager(this));
         db = FirebaseFirestore.getInstance();
         ordemServicos = new ArrayList<>();
         getPrecos = new ArrayList<>();
@@ -88,7 +81,7 @@ public class TelaListarServicoCliente extends AppCompatActivity {
         chatServico();
         Objects.requireNonNull(getSupportActionBar()).setTitle(cliente.substring(0, 1).toUpperCase()
                 .concat(cliente.substring(1).toLowerCase()));
-        bNVStatus.setOnItemSelectedListener(item -> {
+        binding.bNVStatus.setOnItemSelectedListener(item -> {
             limparListas();
             setarVisibilidadeTextView(View.VISIBLE);
             switch (item.getItemId()) {
@@ -119,14 +112,14 @@ public class TelaListarServicoCliente extends AppCompatActivity {
     }
 
     private void setarVisibilidadeTextView(int visibilidade) {
-        tVTotalPreco.setVisibility(visibilidade);
-        txtTotalPreco.setVisibility(visibilidade);
+        binding.tVTotalPreco.setVisibility(visibilidade);
+        binding.txtTotalPreco.setVisibility(visibilidade);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        bNVStatus.setSelectedItemId(R.id.itmTodos);
+        binding.bNVStatus.setSelectedItemId(R.id.itmTodos);
     }
 
     @Override
@@ -257,14 +250,14 @@ public class TelaListarServicoCliente extends AppCompatActivity {
             ordemServicoAdminAdapter = new OrdemServicoAdminAdapter(
                     this, ordemServicos, new ArrayList<>(), ordemServicoAdminClickListener,
                     excluirOrdemServicoClickListener, chatServicoClickListener);
-            rVConsultarServico.setAdapter(ordemServicoAdminAdapter);
+            binding.rVConsultar.setAdapter(ordemServicoAdminAdapter);
             ordemServicoAdminAdapter.notifyDataSetChanged();
         }
         for (Double p : getPrecos)
             preco += p;
         if (preco != null) {
             getPreco = preco;
-            txtTotalPreco.setText(NumberFormat.getCurrencyInstance(LOCALE).format(getPreco));
+            binding.txtTotalPreco.setText(NumberFormat.getCurrencyInstance(LOCALE).format(getPreco));
             preco = 0.0;
         }
         progressDialog.dismiss();
@@ -290,10 +283,10 @@ public class TelaListarServicoCliente extends AppCompatActivity {
                                 Toast.LENGTH_LONG).show();
                         getPreco = getPreco - ordemServicos.get(position).getPreco();
                         /*Depois ver como limpar lista sem duplicar*/
-                        if(!isStatus)
-                            bNVStatus.setSelectedItemId(R.id.itmFinalizada);
+                        if (!isStatus)
+                            binding.bNVStatus.setSelectedItemId(R.id.itmFinalizada);
                         else
-                            bNVStatus.setSelectedItemId(R.id.itmTodos);
+                            binding.bNVStatus.setSelectedItemId(R.id.itmTodos);
                     } else {
                         Log.d("ERROR:", "Erro ao achar documento: ",
                                 task.getException());

@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,10 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,8 +25,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.adapter.ClienteAdapter;
+import br.com.fatec.projetoOrdensDeServicos.databinding.DialogEditarContaBinding;
+import br.com.fatec.projetoOrdensDeServicos.databinding.FragmentRecyclerviewBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.Cliente;
 import br.com.fatec.projetoOrdensDeServicos.telaAdmin.TelaListarServicoCliente;
 import br.com.fatec.projetoOrdensDeServicos.telaAdmin.TelaMenuAdmin;
@@ -45,8 +41,8 @@ public class TodosClientesFragment extends Fragment {
     private String getNome;
     private String getTelefone;
     private String usuarioID;
-    private TextInputLayout txtInputLayout1, txtInputLayout2;
-    private TextInputEditText txtNomeDialog, txtTelDialog;
+    FragmentRecyclerviewBinding binding;
+    private DialogEditarContaBinding dialogBinding;
     private Dialog alterarPerfil;
     private Cliente cliente;
     private ClienteAdapter.StatusContaClickListener statusContaClickListener;
@@ -57,10 +53,11 @@ public class TodosClientesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_recyclerview, container, false);
-        RecyclerView rVConsultar = v.findViewById(R.id.rVListarCliente);
-        rVConsultar.setHasFixedSize(true);
-        rVConsultar.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        binding = FragmentRecyclerviewBinding.inflate(inflater, container, false);
+        View v = binding.getRoot();
+        binding.rVListarCliente.setHasFixedSize(true);
+        binding.rVListarCliente.setLayoutManager(new LinearLayoutManager(
+                this.getActivity()));
         db = FirebaseFirestore.getInstance();
         clientes = new ArrayList<>();
         editarContaClick();
@@ -68,7 +65,7 @@ public class TodosClientesFragment extends Fragment {
         setOnClickListener();
         clienteAdapter = new ClienteAdapter(this.getActivity(), clientes, statusContaClickListener,
                 editarClienteClickListener, listarServicoClickListener);
-        rVConsultar.setAdapter(clienteAdapter);
+        binding.rVListarCliente.setAdapter(clienteAdapter);
         listarMundancaEvento();
         return v;
     }
@@ -86,7 +83,8 @@ public class TodosClientesFragment extends Fragment {
                                 }
                                 Intent intent = new Intent(this.getActivity(),
                                         TelaListarServicoCliente.class);
-                                intent.putExtra("nomeCliente", clientes.get(position).getNome());
+                                intent.putExtra("nomeCliente", clientes.get(position)
+                                        .getNome());
                                 intent.putExtra("usuarioID", usuarioID);
                                 Log.d("VER:", usuarioID);
                                 startActivity(intent);
@@ -144,21 +142,18 @@ public class TodosClientesFragment extends Fragment {
                                 }
                                 AlertDialog.Builder builder = new AlertDialog.Builder(
                                         this.requireActivity());
-                                View view = getLayoutInflater().inflate(R.layout.dialog_editar_conta,
-                                        null);
+                                dialogBinding = DialogEditarContaBinding.inflate(
+                                        getLayoutInflater());
+                                View view = dialogBinding.getRoot();
                                 builder.setTitle("Editar conta:");
                                 builder.setView(view);
-                                txtInputLayout1 = view.findViewById(R.id.txtInputLayout1);
-                                txtNomeDialog = view.findViewById(R.id.txtNomeDialog);
-                                txtInputLayout2 = view.findViewById(R.id.txtInputLayout2);
-                                txtTelDialog = view.findViewById(R.id.txtTelDialog);
                                 pegarDados();
-                                Button btnAtualizar = view.findViewById(R.id.btnAtualizar);
-                                TextView txtCancelar = view.findViewById(R.id.txtCancelar);
                                 alterarPerfil = builder.create();
                                 alterarPerfil.create();
-                                btnAtualizar.setOnClickListener(vOne -> verificarCampos(position));
-                                txtCancelar.setOnClickListener(vTwo -> alterarPerfil.dismiss());
+                                dialogBinding.btnAtualizar.setOnClickListener(vOne ->
+                                        verificarCampos(position));
+                                dialogBinding.txtCancelar.setOnClickListener(vTwo ->
+                                        alterarPerfil.dismiss());
                                 alterarPerfil.setCancelable(false);
                                 alterarPerfil.show();
                             } else {
@@ -169,12 +164,13 @@ public class TodosClientesFragment extends Fragment {
     }
 
     private void pegarDados() {
-        txtTelDialog.addTextChangedListener(Mascara.insert(Mascara.MaskType.TEL, txtTelDialog));
+        dialogBinding.txtTelDialog.addTextChangedListener(Mascara.insert(Mascara.MaskType.TEL,
+                dialogBinding.txtTelDialog));
         docRef = db.collection("usuarios").document(usuarioID);
         docRef.addSnapshotListener((documentSnapshot, error) -> {
             if (documentSnapshot != null) {
-                txtNomeDialog.setText(documentSnapshot.getString("nome"));
-                txtTelDialog.setText(documentSnapshot.getString("telefone"));
+                dialogBinding.txtNomeDialog.setText(documentSnapshot.getString("nome"));
+                dialogBinding.txtTelDialog.setText(documentSnapshot.getString("telefone"));
                 getNome = documentSnapshot.getString("nome");
                 getTelefone = documentSnapshot.getString("telefone");
             }
@@ -183,19 +179,21 @@ public class TodosClientesFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void verificarCampos(int position) {
-        String nome = Objects.requireNonNull(txtNomeDialog.getText()).toString().trim();
-        String telefone = Objects.requireNonNull(txtTelDialog.getText()).toString().trim();
+        String nome = Objects.requireNonNull(dialogBinding.txtNomeDialog.getText()).toString()
+                .trim();
+        String telefone = Objects.requireNonNull(dialogBinding.txtTelDialog.getText()).toString()
+                .trim();
         cliente = new Cliente(nome, clientes.get(position).getEmail(), telefone,
                 clientes.get(position).getStatusConta());
         if (cliente.getNome().isEmpty() || cliente.getTelefone().isEmpty()) {
             if (cliente.getNome().isEmpty())
-                txtInputLayout1.setError("Preencha o campo");
+                dialogBinding.txtInputLayout1.setError("Preencha o campo");
             else
-                txtInputLayout1.setError(null);
+                dialogBinding.txtInputLayout1.setError(null);
             if (cliente.getTelefone().isEmpty())
-                txtInputLayout2.setError("Preencha o campo");
+                dialogBinding.txtInputLayout2.setError("Preencha o campo");
             else
-                txtInputLayout2.setError(null);
+                dialogBinding.txtInputLayout2.setError(null);
         } else {
             if (cliente.getTelefone().length() < 15) {
                 Toast.makeText(this.getActivity(), "Telefone Inválido",

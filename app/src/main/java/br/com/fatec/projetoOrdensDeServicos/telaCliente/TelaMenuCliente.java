@@ -1,17 +1,13 @@
 package br.com.fatec.projetoOrdensDeServicos.telaCliente;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.TooltipCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,26 +18,23 @@ import java.util.Objects;
 
 import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.TelaLogin;
+import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityMenuClienteBinding;
 
 public class TelaMenuCliente extends AppCompatActivity implements View.OnClickListener {
-    private TextView txtCliente;
+    private ActivityMenuClienteBinding binding;
     private final FirebaseFirestore DB = FirebaseFirestore.getInstance();
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_cliente);
-        txtCliente = findViewById(R.id.txtCliente);
-        Button btnCliente = findViewById(R.id.btnCliente);
-        Button btnOrdemServico = findViewById(R.id.btnOrdemServico);
-        Button btnConsultarServico = findViewById(R.id.btnConsultarServico);
-        ImageButton btnSair = findViewById(R.id.btnSair);
-        btnSair.setTooltipText("Deslogar");
-        btnSair.setOnClickListener(this);
-        btnCliente.setOnClickListener(this);
-        btnOrdemServico.setOnClickListener(this);
-        btnConsultarServico.setOnClickListener(this);
+        binding = ActivityMenuClienteBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        TooltipCompat.setTooltipText(binding.btnSair, "Deslogar");
+        binding.btnSair.setOnClickListener(this);
+        binding.btnCliente.setOnClickListener(this);
+        binding.btnOrdemServico.setOnClickListener(this);
+        binding.btnConsultarServico.setOnClickListener(this);
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -70,7 +63,8 @@ public class TelaMenuCliente extends AppCompatActivity implements View.OnClickLi
         DocumentReference docRef = DB.collection("usuarios").document(usuarioID);
         docRef.addSnapshotListener((documentSnapshot, error) -> {
             if (documentSnapshot != null) {
-                txtCliente.setText("Usuário: " + documentSnapshot.getString("nome"));
+                binding.txtCliente.setText("Usuário: " + documentSnapshot
+                        .getString("nome"));
             }
         });
 

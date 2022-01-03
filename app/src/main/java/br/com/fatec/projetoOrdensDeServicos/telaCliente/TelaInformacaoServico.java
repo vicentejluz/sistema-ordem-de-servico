@@ -1,18 +1,14 @@
 package br.com.fatec.projetoOrdensDeServicos.telaCliente;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -28,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import br.com.fatec.projetoOrdensDeServicos.R;
+import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityInformacaoServicoBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.OrdemServico;
 import br.com.fatec.projetoOrdensDeServicos.entity.StatusOrdemServico;
 import br.com.fatec.projetoOrdensDeServicos.util.MascaraMonetaria;
@@ -35,33 +32,24 @@ import br.com.fatec.projetoOrdensDeServicos.util.MascaraMonetaria;
 public class TelaInformacaoServico extends AppCompatActivity implements View.OnClickListener {
     private String nomeServicoCons, descricao, nomeServico, dataAbertura, status, dataFinalizacao;
     private Double preco;
-    private Button btnCancelar, btnAceitar;
+    private ActivityInformacaoServicoBinding binding;
     private String usuarioID, idServico;
     private Map<String, Object> data;
     private Timestamp timestampDataAbertura, timestampDataFinalizacao;
     private final Locale LOCALE = new Locale("pt", "BR");
     private final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", LOCALE);
-    private TextInputEditText txtNomeServico, txtDescricao, txtPreco, txtDataAbertura, txtStatus;
-    private TextInputEditText txtDataFinalizacao;
     private FirebaseFirestore db;
     private OrdemServico ordemServico;
     private static final String TAG = "Informação do servico";
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_informacao_servico);
-        txtNomeServico = findViewById(R.id.txtNomeServico);
-        txtDescricao = findViewById(R.id.txtDescricao);
-        txtDataAbertura = findViewById(R.id.txtDataAbertura);
-        txtPreco = findViewById(R.id.txtPreco);
-        txtDataFinalizacao = findViewById(R.id.txtDataFinal);
-        txtStatus = findViewById(R.id.txtStatus);
-        btnAceitar = findViewById(R.id.btnAceitar);
-        btnCancelar = findViewById(R.id.btnCancelar);
-        btnAceitar.setOnClickListener(this);
-        btnCancelar.setOnClickListener(this);
+        binding = ActivityInformacaoServicoBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        binding.btnAceitar.setOnClickListener(this);
+        binding.btnCancelar.setOnClickListener(this);
         db = FirebaseFirestore.getInstance();
         data = new HashMap<>();
         dadosItemLista();
@@ -125,24 +113,24 @@ public class TelaInformacaoServico extends AppCompatActivity implements View.OnC
 
 
     private void status() {
-        if (Objects.requireNonNull(txtStatus.getText()).toString().equals(
+        if (Objects.requireNonNull(binding.txtStatus.getText()).toString().equals(
                 StatusOrdemServico.CANCELADA.name())) {
-            btnCancelar.setEnabled(false);
-            btnAceitar.setEnabled(false);
+            binding.btnCancelar.setEnabled(false);
+            binding.btnAceitar.setEnabled(false);
         } else {
-            if (Objects.requireNonNull(txtStatus.getText()).toString().equals(
+            if (Objects.requireNonNull(binding.txtStatus.getText()).toString().equals(
                     StatusOrdemServico.ABERTA.name())) {
-                btnAceitar.setEnabled(false);
-                btnCancelar.setEnabled(true);
+                binding.btnAceitar.setEnabled(false);
+                binding.btnCancelar.setEnabled(true);
             } else {
-                if ((Objects.requireNonNull(txtStatus.getText()).toString().equals(
+                if ((Objects.requireNonNull(binding.txtStatus.getText()).toString().equals(
                         StatusOrdemServico.FINALIZADA.name()))) {
-                    btnAceitar.setEnabled(false);
-                    btnCancelar.setEnabled(false);
+                    binding.btnAceitar.setEnabled(false);
+                    binding.btnCancelar.setEnabled(false);
                 } else {
                     if (preco > 0)
-                        btnAceitar.setEnabled(true);
-                    btnCancelar.setEnabled(true);
+                        binding.btnAceitar.setEnabled(true);
+                    binding.btnCancelar.setEnabled(true);
                 }
             }
         }
@@ -159,27 +147,27 @@ public class TelaInformacaoServico extends AppCompatActivity implements View.OnC
         if (ordemServico.getDatafinalizacao() != null)
             dataFinalizacao = SIMPLE_DATE_FORMAT.format(ordemServico.getDatafinalizacao().toDate());
 
-        txtNomeServico.setText(ordemServico.getNomeServico().substring(0, 1).toUpperCase()
+        binding.txtNomeServico.setText(ordemServico.getNomeServico().substring(0, 1).toUpperCase()
                 .concat(ordemServico.getNomeServico().substring(1)));
-        txtDescricao.setText(ordemServico.getDescricao().substring(0, 1).toUpperCase()
+        binding.txtDescricao.setText(ordemServico.getDescricao().substring(0, 1).toUpperCase()
                 .concat(ordemServico.getDescricao().substring(1)));
         if (preco <= 0)
-            txtPreco.setText("");
+            binding.txtPreco.setText("");
         else {
-            txtPreco.addTextChangedListener(new MascaraMonetaria(txtPreco, LOCALE));
-            txtPreco.setText(decimalFormat.format(ordemServico.getPreco()));
+            binding.txtPreco.addTextChangedListener(new MascaraMonetaria(binding.txtPreco, LOCALE));
+            binding.txtPreco.setText(decimalFormat.format(ordemServico.getPreco()));
         }
-        txtDataAbertura.setText(dataAbertura);
-        txtDataFinalizacao.setText(dataFinalizacao);
+        binding.txtDataAbertura.setText(dataAbertura);
+        binding.txtDataFinal.setText(dataFinalizacao);
         if (status.equals("-")) {
-            txtStatus.setText("");
+            binding.txtStatus.setText("");
         } else {
-            txtStatus.setText(ordemServico.getStatus());
+            binding.txtStatus.setText(ordemServico.getStatus());
         }
     }
 
     private void aceitarServico() {
-        btnAceitar.setEnabled(false);
+        binding.btnAceitar.setEnabled(false);
         Timestamp timestamp = Timestamp.now();
         usuarioID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser())
                 .getUid();
@@ -207,8 +195,8 @@ public class TelaInformacaoServico extends AppCompatActivity implements View.OnC
     }
 
     private void cancelarServico() {
-        btnCancelar.setEnabled(false);
-        btnAceitar.setEnabled(false);
+        binding.btnCancelar.setEnabled(false);
+        binding.btnAceitar.setEnabled(false);
         usuarioID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser())
                 .getUid();
         data.put("status", StatusOrdemServico.CANCELADA.name());
