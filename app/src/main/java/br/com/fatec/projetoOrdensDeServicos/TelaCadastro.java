@@ -2,6 +2,7 @@ package br.com.fatec.projetoOrdensDeServicos;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.TooltipCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -46,6 +47,8 @@ public class TelaCadastro extends AppCompatActivity implements View.OnClickListe
         cadastrar = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         data = new HashMap<>();
+        TooltipCompat.setTooltipText(binding.imBVoltar, "Voltar");
+        binding.imBVoltar.setOnClickListener(v -> telaLogin());
         binding.btnCadastrar.setOnClickListener(this);
         binding.txtTel.addTextChangedListener(Mascara.insert(Mascara.MaskType.TEL, binding.txtTel));
     }
@@ -140,5 +143,9 @@ public class TelaCadastro extends AppCompatActivity implements View.OnClickListe
         inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager
                 .HIDE_NOT_ALWAYS);
         registrarUsuario();
+    }
+
+    public  void telaLogin(){
+        onBackPressed();
     }
 }

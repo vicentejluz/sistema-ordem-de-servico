@@ -75,5 +75,6 @@
     <string name="enviar">Enviar</string>
     <string name="mensagem">Digite a mensagem</string>
     <string name="total_dos_precos">Total dos preços:</string>
+    <string name="voltar">Voltar</string>
 
 </resources>

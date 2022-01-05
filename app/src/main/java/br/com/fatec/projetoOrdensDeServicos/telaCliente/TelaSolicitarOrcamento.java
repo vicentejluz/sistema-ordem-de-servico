@@ -2,6 +2,7 @@ package br.com.fatec.projetoOrdensDeServicos.telaCliente;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.TooltipCompat;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -41,7 +42,13 @@ public class TelaSolicitarOrcamento extends AppCompatActivity implements View.On
         setContentView(view);
         db = FirebaseFirestore.getInstance();
         data = new HashMap<>();
+        TooltipCompat.setTooltipText(binding.imBVoltar, "Voltar");
+        binding.imBVoltar.setOnClickListener(v -> telaMenu());
         binding.btnCadastrar.setOnClickListener(this);
+    }
+
+    private void telaMenu() {
+        onBackPressed();
     }
 
     @Override
