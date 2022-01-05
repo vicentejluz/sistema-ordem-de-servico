@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
                 android:contentDescription="@string/editar_conta"
-                android:src="@drawable/ic_baseline_edit_24"
+                android:src="@drawable/ic_baseline_edit"
                 tools:ignore="TouchTargetSizeCheck,UnusedAttribute,ImageContrastCheck" />
 
         </LinearLayout>

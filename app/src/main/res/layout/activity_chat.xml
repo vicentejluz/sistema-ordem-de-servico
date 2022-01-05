@@ -34,7 +34,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/button_ripple"
             android:contentDescription="@string/enviar"
-            app:srcCompat="@drawable/ic_baseline_send_24"
+            app:srcCompat="@drawable/ic_baseline_send"
             tools:ignore="ImageContrastCheck,TouchTargetSizeCheck,UnusedAttribute" />
 
     </FrameLayout>
