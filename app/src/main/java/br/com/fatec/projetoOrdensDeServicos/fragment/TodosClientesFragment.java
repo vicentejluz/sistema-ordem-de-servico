@@ -227,23 +227,22 @@ public class TodosClientesFragment extends Fragment {
                     if (error != null) {
                         Log.e("Erro no Firestore", error.getMessage());
                     } else {
-                        assert value != null;
-                        if (value.isEmpty()) {
-                            Toast.makeText(this.getActivity(), "Nenhum cliente cadastrado!!",
-                                    Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(this.getActivity(), TelaMenuAdmin.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                    Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                        } else {
-                            for (DocumentChange dc : value.getDocumentChanges()) {
-                                if (dc.getType() == DocumentChange.Type.ADDED) {
-                                    clientes.add(dc.getDocument().toObject(
-                                            Cliente.class));
-                                    clienteAdapter.notifyDataSetChanged();
+                            if (Objects.requireNonNull(value).isEmpty()) {
+                                Toast.makeText(this.getActivity(), "Nenhum cliente cadastrado!!",
+                                        Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(this.getActivity(), TelaMenuAdmin.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                                        Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            } else {
+                                for (DocumentChange dc : value.getDocumentChanges()) {
+                                    if (dc.getType() == DocumentChange.Type.ADDED) {
+                                        clientes.add(dc.getDocument().toObject(
+                                                Cliente.class));
+                                        clienteAdapter.notifyDataSetChanged();
+                                    }
                                 }
                             }
-                        }
                     }
                 });
     }

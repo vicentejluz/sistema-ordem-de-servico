@@ -87,7 +87,6 @@ public class TelaAlterarSenha extends AppCompatActivity implements View.OnClickL
     }
 
     private void confimarAlteracaoSenha() {
-        assert usuario != null;
         AlertDialog.Builder alterarSenha = new AlertDialog.Builder(TelaAlterarSenha.this);
         alterarSenha.setTitle("Atenção!!");
         alterarSenha.setMessage("Tem certeza que deseja alterar a senha?");

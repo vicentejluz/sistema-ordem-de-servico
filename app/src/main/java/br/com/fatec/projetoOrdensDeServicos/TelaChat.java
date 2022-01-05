@@ -99,13 +99,14 @@ public class TelaChat extends AppCompatActivity implements View.OnClickListener 
                             FirebaseAuth.getInstance().getUid())).get().addOnSuccessListener(
                             documentSnapshot -> {
                                 privilegio = documentSnapshot.getString("privilegio");
-                                assert privilegio != null;
-                                if (privilegio.equalsIgnoreCase("Cliente"))
-                                    eu = documentSnapshot.getId();
-                                else if (privilegio.equalsIgnoreCase("Admin"))
-                                    eu = IDCHAT;
-                                else
-                                    Log.d("ERROR", "Privilegio não encontrado");
+                                if (privilegio != null) {
+                                    if (privilegio.equalsIgnoreCase("Cliente"))
+                                        eu = documentSnapshot.getId();
+                                    else if (privilegio.equalsIgnoreCase("Admin"))
+                                        eu = IDCHAT;
+                                    else
+                                        Log.d("ERROR", "Privilegio não encontrado");
+                                }
                                 fetchMessages();
                             });
                 });
@@ -128,8 +129,8 @@ public class TelaChat extends AppCompatActivity implements View.OnClickListener 
                             Log.e("Erro no Firestore", error.getMessage());
                             return;
                         }
-                        assert value != null;
-                        List<DocumentChange> documentChanges = value.getDocumentChanges();
+                        List<DocumentChange> documentChanges = Objects.requireNonNull(value)
+                                .getDocumentChanges();
 
                         for (DocumentChange doc : documentChanges) {
                             if (doc.getType() == DocumentChange.Type.ADDED) {
@@ -168,8 +169,7 @@ public class TelaChat extends AppCompatActivity implements View.OnClickListener 
                 .getInstance().getUid())).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     privilegio = documentSnapshot.getString("privilegio");
-                    assert privilegio != null;
-                    if (privilegio.equalsIgnoreCase("Admin"))
+                    if (Objects.requireNonNull(privilegio).equalsIgnoreCase("Admin"))
                         fromId = IDCHAT;
                     else
                         fromId = FirebaseAuth.getInstance().getUid();
@@ -201,7 +201,6 @@ public class TelaChat extends AppCompatActivity implements View.OnClickListener 
 
         binding.editTChat.setText(null);
 
-        assert fromId != null;
         if (!fromId.equals(usuarioID))
             toId = usuarioID;
         else

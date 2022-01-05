@@ -61,19 +61,16 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
                                     .addOnCompleteListener(task1 -> {
                                         if (task1.isSuccessful()) {
                                             DocumentSnapshot document = task1.getResult();
-                                            assert document != null;
-                                            if (document.exists()) {
+                                            if (Objects.requireNonNull(document).exists()) {
                                                 privilegio = document.getString("privilegio");
                                                 statusConta = document.getString("statusConta");
-                                                assert statusConta != null;
-                                                if (statusConta.equalsIgnoreCase(
-                                                        "Bloqueado")) {
+                                                if (Objects.requireNonNull(statusConta)
+                                                        .equalsIgnoreCase("Bloqueado")) {
                                                     Toast.makeText(TelaLogin.this,
                                                             "Usuário Bloqueado", Toast
                                                                     .LENGTH_LONG).show();
                                                     FirebaseAuth.getInstance().signOut();
                                                 } else {
-                                                    assert privilegio != null;
                                                     if (privilegio.equalsIgnoreCase(
                                                             "Cliente")) {
                                                         mudancaActivity(TelaMenuCliente.class);

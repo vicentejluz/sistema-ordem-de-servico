@@ -153,8 +153,8 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
                     if (error != null) {
                         Log.e("Erro no Firestore", error.getMessage());
                     } else {
-                        assert value != null;
-                        for (DocumentChange dc : value.getDocumentChanges()) {
+                        for (DocumentChange dc : Objects.requireNonNull(value)
+                                .getDocumentChanges()) {
                             statusServico = null;
                             adicionarValores(dc);
                         }
@@ -171,8 +171,7 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
                     if (error != null) {
                         Log.e("Erro no Firestore", error.getMessage());
                     } else {
-                        assert value != null;
-                        procuraServico(value, dtc);
+                        procuraServico(Objects.requireNonNull(value), dtc);
                     }
                 });
     }
@@ -183,8 +182,8 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
                     if (error != null) {
                         Log.e("Erro no Firestore", error.getMessage());
                     } else {
-                        assert value != null;
-                        for (DocumentChange dc : value.getDocumentChanges()) {
+                        for (DocumentChange dc : Objects.requireNonNull(value)
+                                .getDocumentChanges()) {
                             adicionarValoresStatus(dc, status);
                         }
                     }
@@ -200,9 +199,8 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
                     if (error != null) {
                         Log.e("Erro no Firestore", error.getMessage());
                     } else {
-                        assert value != null;
                         statusServico = status;
-                        procuraServico(value, dtc);
+                        procuraServico(Objects.requireNonNull(value), dtc);
                     }
                 });
     }

@@ -137,31 +137,30 @@ public class TelaConsultarServico extends AppCompatActivity {
                 Query.Direction.ASCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        assert progressDialog != null;
                         if (progressDialog.isShowing())
                             progressDialog.dismiss();
                         Log.e("Erro no Firestore", error.getMessage());
                         return;
                     }
+                    if (value != null) {
+                        if (progressDialog.isShowing() && value.isEmpty()) {
+                            new Handler().postDelayed(() -> {
+                                Intent intent = new Intent(this, TelaMenuCliente.class);
+                                startActivity(intent);
+                                Toast.makeText(this, "Serviços não encontrado",
+                                        Toast.LENGTH_LONG).show();
+                                progressDialog.dismiss();
 
-                    assert value != null;
-                    if (progressDialog.isShowing() && value.isEmpty()) {
-                        new Handler().postDelayed(() -> {
-                            Intent intent = new Intent(this, TelaMenuCliente.class);
-                            startActivity(intent);
-                            Toast.makeText(this, "Serviços não encontrado",
-                                    Toast.LENGTH_LONG).show();
-                            progressDialog.dismiss();
+                            }, 3000);
 
-                        }, 3000);
-
-                    } else {
-                        statusServico = null;
-                        if (isProgressDialog) {
-                            new Handler().postDelayed(() -> procuraServico(value), 2000);
-                            isProgressDialog = false;
-                        } else
-                            procuraServico(value);
+                        } else {
+                            statusServico = null;
+                            if (isProgressDialog) {
+                                new Handler().postDelayed(() -> procuraServico(value), 2000);
+                                isProgressDialog = false;
+                            } else
+                                procuraServico(value);
+                        }
                     }
                 });
     }
@@ -177,9 +176,8 @@ public class TelaConsultarServico extends AppCompatActivity {
                     if (error != null) {
                         Log.e("Erro no Firestore", error.getMessage());
                     } else {
-                        assert value != null;
                         statusServico = status;
-                        procuraServico(value);
+                        procuraServico(Objects.requireNonNull(value));
                     }
                 });
     }

@@ -93,7 +93,6 @@ public class TelaConfigConta extends AppCompatActivity implements View.OnClickLi
 
     private void alterarDadosUsuario() {
         DocumentReference docRef = DB.collection("usuarios").document(usuarioID);
-        assert USUARIO != null;
         USUARIO.updateEmail(cliente.getEmail()).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(TAG, "Endereço de e-mail do usuário atualizado.");

@@ -171,31 +171,33 @@ public class SelecionarStatusClienteFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void listarMundancaEvento() {
-        assert getArguments() != null;
-        final String STATUSCONTA = getArguments().getString("statusConta");
-        db.collection("usuarios").whereEqualTo("privilegio", "Cliente")
-                .orderBy("nome", Query.Direction.ASCENDING)
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Log.e("Erro no Firestore", error.getMessage());
-                    } else {
-                        assert value != null;
-                        for (DocumentChange dc : value.getDocumentChanges()) {
-                            if (dc.getType() == DocumentChange.Type.ADDED) {
-                                statusContas.add(dc.getDocument().getString("statusConta"));
-                                for (String s : statusContas) {
-                                    if (s.equals(STATUSCONTA)) {
-                                        clientes.add(dc.getDocument().toObject(
-                                                Cliente.class));
-                                        usuariosID.add(dc.getDocument().getId());
-                                        Log.d("VER", STATUSCONTA);
+        final String STATUSCONTA;
+        if (getArguments() != null) {
+            STATUSCONTA = getArguments().getString("statusConta");
+            db.collection("usuarios").whereEqualTo("privilegio", "Cliente")
+                    .orderBy("nome", Query.Direction.ASCENDING)
+                    .addSnapshotListener((value, error) -> {
+                        if (error != null) {
+                            Log.e("Erro no Firestore", error.getMessage());
+                        } else {
+                            for (DocumentChange dc : Objects.requireNonNull(value)
+                                    .getDocumentChanges()) {
+                                if (dc.getType() == DocumentChange.Type.ADDED) {
+                                    statusContas.add(dc.getDocument().getString("statusConta"));
+                                    for (String s : statusContas) {
+                                        if (s.equals(STATUSCONTA)) {
+                                            clientes.add(dc.getDocument().toObject(
+                                                    Cliente.class));
+                                            usuariosID.add(dc.getDocument().getId());
+                                            Log.d("VER", STATUSCONTA);
+                                        }
                                     }
+                                    statusContas.clear();
                                 }
-                                statusContas.clear();
                             }
+                            clienteAdapter.notifyDataSetChanged();
                         }
-                        clienteAdapter.notifyDataSetChanged();
-                    }
-                });
+                    });
+        }
     }
 }
