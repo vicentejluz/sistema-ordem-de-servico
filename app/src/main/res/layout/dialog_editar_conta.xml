@@ -57,20 +57,12 @@
         android:layout_height="67dp"
         android:text="@string/atualizar" />
 
-    <TextView
+    <Button
         android:id="@+id/txtCancelar"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="80dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:text="@string/cancelar"
-        android:textAlignment="center"
-        android:textColor="@color/azul_ab"
-        android:textSize="18sp" />
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/cancelar" />
 
 </LinearLayout>
