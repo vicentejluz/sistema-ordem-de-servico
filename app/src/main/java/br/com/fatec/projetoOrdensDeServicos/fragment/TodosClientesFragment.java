@@ -152,7 +152,7 @@ public class TodosClientesFragment extends Fragment {
                                 alterarPerfil.create();
                                 dialogBinding.btnAtualizar.setOnClickListener(vOne ->
                                         verificarCampos(position));
-                                dialogBinding.txtCancelar.setOnClickListener(vTwo ->
+                                dialogBinding.btnCancelar.setOnClickListener(vTwo ->
                                         alterarPerfil.dismiss());
                                 alterarPerfil.setCancelable(false);
                                 alterarPerfil.show();

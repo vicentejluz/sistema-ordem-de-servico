@@ -146,7 +146,7 @@ public class TelaConfigConta extends AppCompatActivity implements View.OnClickLi
                         });
             }
         });
-        dialogBinding.txtCancelar.setOnClickListener(v12 -> {
+        dialogBinding.btnCancelar.setOnClickListener(v12 -> {
             alterarPerfil.dismiss();
             onStart();
         });

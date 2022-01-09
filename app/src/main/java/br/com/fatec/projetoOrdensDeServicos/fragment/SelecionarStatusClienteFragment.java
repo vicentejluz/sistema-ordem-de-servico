@@ -110,7 +110,7 @@ public class SelecionarStatusClienteFragment extends Fragment {
             alterarPerfil = builder.create();
             alterarPerfil.create();
             dialogBinding.btnAtualizar.setOnClickListener(vOne -> verificarCampos(position));
-            dialogBinding.txtCancelar.setOnClickListener(vTwo -> alterarPerfil.dismiss());
+            dialogBinding.btnCancelar.setOnClickListener(vTwo -> alterarPerfil.dismiss());
             alterarPerfil.setCancelable(false);
             alterarPerfil.show();
         };
