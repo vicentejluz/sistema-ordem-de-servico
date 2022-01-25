@@ -3,7 +3,7 @@
 TIPO DE NEGÓCIO: EMPRESA DE DESENVOLVIMENTO DE SOFTWARES 
 
 OBJETIVO: 
-<p align="justify">Implementar um sistema para processar Ordens de Serviços prestados por uma empresa de desenvolvimento Software (o sistema pode ser composto de um, dois ou três aplicativos compartilhando o mesmo banco de dados). A equipe de análise e desenvolvimento usará esse registro como guia para entregar as tarefas, formalizar o trabalho prestado para o cliente e garantir os resultados tanto para a empresa, quanto para o consumidor. O sistema deve processar os dados do cliente, serviço a ser prestado (no nosso caso o desenvolvimento dos apps), o status do serviço (aberto finalizado, cancelado). O diagrama de classes em anexo apresenta alguns dados necessários.</p>
+<p align="justify">Implementar um sistema para processar Ordens de Serviços prestados por uma empresa de desenvolvimento Software (o sistema pode ser composto de um, dois ou três aplicativos compartilhando o mesmo banco de dados). A equipe de análise e desenvolvimento usará esse registro como guia para entregar as tarefas, formalizar o trabalho prestado para o cliente e garantir os resultados tanto para a empresa, quanto para o consumidor. O sistema deve processar os dados do cliente, serviço a ser prestado (no nosso caso o desenvolvimento dos apps), o status do serviço (aberto, finalizado ou cancelado). O diagrama de classes em anexo apresenta alguns dados necessários.</p>
 
 O sistema deve no mínimo implementar os seguintes requisitos funcionais: 
 - Permitir cadastrar clientes, 
