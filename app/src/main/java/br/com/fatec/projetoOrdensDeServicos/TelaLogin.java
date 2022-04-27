@@ -3,7 +3,6 @@ package br.com.fatec.projetoOrdensDeServicos;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,13 +22,14 @@ import java.util.Objects;
 import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityLoginBinding;
 import br.com.fatec.projetoOrdensDeServicos.telaAdmin.TelaMenuAdmin;
 import br.com.fatec.projetoOrdensDeServicos.telaCliente.TelaMenuCliente;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
 public class TelaLogin extends AppCompatActivity implements View.OnClickListener {
     private String email, privilegio, statusConta;
     private FirebaseAuth autenticacao;
     private final FirebaseFirestore DB = FirebaseFirestore.getInstance();
     private ActivityLoginBinding binding;
-    private static final String TAG = "Login";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +39,8 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
         View view = binding.getRoot();
         setContentView(view);
         autenticacao = FirebaseAuth.getInstance();
-        binding.btnRecuperarSenha.setOnClickListener(this);
-        binding.btnCadastro.setOnClickListener(this);
+        binding.btnRecuperarSenha.setOnClickListener(v -> telarecuperarSenha());
+        binding.btnCadastro.setOnClickListener(v -> telaCadastro());
         binding.btnEntrar.setOnClickListener(this);
     }
 
@@ -48,13 +48,13 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
         email = Objects.requireNonNull(binding.txtEmail.getText()).toString().trim();
         String senha = Objects.requireNonNull(binding.txtSenha.getText()).toString().trim();
         if (email.isEmpty() || senha.isEmpty()) {
-            Toast.makeText(TelaLogin.this, "ERRO - Preencha todos os campos",
+            Toast.makeText(TelaLogin.this, Constante.PREENCHA_TODOS_CAMPOS,
                     Toast.LENGTH_LONG).show();
         } else {
             autenticacao.signInWithEmailAndPassword(email, senha)
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
-                            DocumentReference docRef = DB.collection("usuarios")
+                            DocumentReference docRef = DB.collection(Constante.USUARIOS)
                                     .document(Objects.requireNonNull(autenticacao.getCurrentUser())
                                             .getUid());
                             docRef.get()
@@ -62,28 +62,28 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
                                         if (task1.isSuccessful()) {
                                             DocumentSnapshot document = task1.getResult();
                                             if (Objects.requireNonNull(document).exists()) {
-                                                privilegio = document.getString("privilegio");
-                                                statusConta = document.getString("statusConta");
+                                                privilegio = document.getString(Constante.PRIVILEGIO);
+                                                statusConta = document.getString(Constante.STATUS_CONTA);
                                                 if (Objects.requireNonNull(statusConta)
-                                                        .equalsIgnoreCase("Bloqueado")) {
+                                                        .equalsIgnoreCase(Constante.BLOQUEADO)) {
                                                     Toast.makeText(TelaLogin.this,
-                                                            "Usuário Bloqueado", Toast
+                                                            Constante.USUARIO_BLOQUEADO, Toast
                                                                     .LENGTH_LONG).show();
                                                     FirebaseAuth.getInstance().signOut();
                                                 } else {
-                                                    if (privilegio.equalsIgnoreCase(
-                                                            "Cliente")) {
+                                                    if (privilegio.equalsIgnoreCase(Constante.CLIENTE)) {
                                                         mudancaActivity(TelaMenuCliente.class);
                                                     } else {
                                                         mudancaActivity(TelaMenuAdmin.class);
                                                     }
                                                 }
                                             } else {
-                                                Log.d(TAG, "No such document");
+                                                Log.d(Constante.TAG_LOGIN,
+                                                        Constante.DOCUMENTO_NAO_EXISTE);
                                             }
                                         } else {
-                                            Log.d(TAG, "get failed with ", task1
-                                                    .getException());
+                                            Log.d(Constante.TAG_LOGIN, Constante.FALHA_PROCURAR,
+                                                    task1.getException());
                                         }
                                     });
 
@@ -92,33 +92,22 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
                             try {
                                 throw Objects.requireNonNull(task.getException());
                             } catch (Exception e) {
-                                erro = "Email ou senha inválido";
+                                erro = Constante.EMAIL_OU_SENHA_INVALIDO;
                             }
-                            Log.w(TAG, "Autenticação: falhou", task.getException());
+                            Log.w(Constante.TAG_LOGIN, Constante.AUTENTICACAO_FALHOU,
+                                    task.getException());
                             Toast.makeText(TelaLogin.this, erro, Toast.LENGTH_LONG).show();
                         }
                     });
         }
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(@NonNull View v) {
-        switch (v.getId()) {
-            case R.id.btnCadastro:
-                telaCadastro();
-                break;
-            case R.id.btnEntrar:
-                InputMethodManager inputManager = (InputMethodManager) this
-                        .getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.hideSoftInputFromWindow(v.getWindowToken(),
-                        InputMethodManager.HIDE_NOT_ALWAYS);
-                logarUsuario();
-                break;
-            case R.id.btnRecuperarSenha:
-                telarecuperarSenha();
-                break;
-        }
+        InputMethodManager inputManager = (InputMethodManager) this.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        logarUsuario();
     }
 
     public void telaCadastro() {
@@ -145,11 +134,11 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
         binding.btnCadastro.setEnabled(false);
         binding.btnRecuperarSenha.setEnabled(false);
         new Handler().postDelayed(() -> {
-            Toast.makeText(TelaLogin.this, "Logado com sucesso: " + email,
+            Toast.makeText(TelaLogin.this, Constante.LOGADO_SUCESSO + email,
                     Toast.LENGTH_LONG).show();
             Intent intent = new Intent(TelaLogin.this, tela);
             startActivity(intent);
             finish();
-        }, 3000);
+        }, Constante.TEMPO_3SEG);
     }
 }

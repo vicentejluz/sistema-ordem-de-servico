@@ -1,10 +1,8 @@
 package br.com.fatec.projetoOrdensDeServicos.telaAdmin;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TooltipCompat;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -13,12 +11,12 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.TelaLogin;
 
 import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityMenuAdminBinding;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
-public class TelaMenuAdmin extends AppCompatActivity implements View.OnClickListener {
+public class TelaMenuAdmin extends AppCompatActivity {
     ActivityMenuAdminBinding binding;
 
     @Override
@@ -27,25 +25,10 @@ public class TelaMenuAdmin extends AppCompatActivity implements View.OnClickList
         binding = ActivityMenuAdminBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        TooltipCompat.setTooltipText(binding.btnSair, "Deslogar");
-        binding.btnSair.setOnClickListener(this);
-        binding.btnListarCliente.setOnClickListener(this);
-        binding.btnConsultarServico.setOnClickListener(this);
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    public void onClick(@NonNull View v) {
-        switch (v.getId()) {
-            case R.id.btnSair:
-                telaSair();
-                break;
-            case R.id.btnListarCliente:
-                telaListarCliente();
-                break;
-            case R.id.btnConsultarServico:
-                telaConsultarServico();
-                break;
-        }
+        TooltipCompat.setTooltipText(binding.btnSair, Constante.DESLOGAR);
+        binding.btnSair.setOnClickListener(v -> telaSair());
+        binding.btnListarCliente.setOnClickListener(v -> telaListarCliente());
+        binding.btnConsultarServico.setOnClickListener(v -> telaConsultarServico());
     }
 
     public void telaListarCliente() {
@@ -60,7 +43,7 @@ public class TelaMenuAdmin extends AppCompatActivity implements View.OnClickList
 
     public void telaSair() {
         FirebaseAuth.getInstance().signOut();
-        Toast.makeText(this, "Conta deslogada com sucesso", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, Constante.CONTA_DESLOGADA_SUCESSO, Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, TelaLogin.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

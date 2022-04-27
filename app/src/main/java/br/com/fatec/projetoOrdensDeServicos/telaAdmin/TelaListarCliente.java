@@ -3,7 +3,6 @@ package br.com.fatec.projetoOrdensDeServicos.telaAdmin;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 
@@ -11,12 +10,12 @@ import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityListarClienteBinding;
 import br.com.fatec.projetoOrdensDeServicos.fragment.SelecionarStatusClienteFragment;
 import br.com.fatec.projetoOrdensDeServicos.fragment.TodosClientesFragment;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
 public class TelaListarCliente extends AppCompatActivity {
     ActivityListarClienteBinding binding;
     Bundle statusConta = new Bundle();
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,21 +28,17 @@ public class TelaListarCliente extends AppCompatActivity {
         }
 
         binding.bNVStatusConta.setOnItemSelectedListener(item -> {
-            Fragment selecionarfragmento = null;
-            switch (item.getItemId()) {
-                case R.id.itmTodos:
-                    selecionarfragmento = new TodosClientesFragment();
-                    break;
-                case R.id.itmDesbloqueado:
-                    statusConta.putString("statusConta", "Desbloqueado");
-                    selecionarfragmento = new SelecionarStatusClienteFragment();
-                    selecionarfragmento.setArguments(statusConta);
-                    break;
-                case R.id.itmBloqueado:
-                    statusConta.putString("statusConta", "Bloqueado");
-                    selecionarfragmento = new SelecionarStatusClienteFragment();
-                    selecionarfragmento.setArguments(statusConta);
-                    break;
+            Fragment selecionarfragmento;
+            if (item.getItemId() == R.id.itmTodos)
+                selecionarfragmento = new TodosClientesFragment();
+            else if (item.getItemId() == R.id.itmDesbloqueado) {
+                statusConta.putString(Constante.STATUS_CONTA, Constante.DESBLOQUEADO);
+                selecionarfragmento = new SelecionarStatusClienteFragment();
+                selecionarfragmento.setArguments(statusConta);
+            } else {
+                statusConta.putString(Constante.STATUS_CONTA, Constante.BLOQUEADO);
+                selecionarfragmento = new SelecionarStatusClienteFragment();
+                selecionarfragmento.setArguments(statusConta);
             }
             return LoadFragment(selecionarfragmento);
         });

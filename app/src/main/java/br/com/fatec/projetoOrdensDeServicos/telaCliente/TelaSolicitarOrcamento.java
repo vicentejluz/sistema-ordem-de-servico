@@ -1,10 +1,8 @@
 package br.com.fatec.projetoOrdensDeServicos.telaCliente;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TooltipCompat;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,15 +21,14 @@ import java.util.Objects;
 
 import br.com.fatec.projetoOrdensDeServicos.databinding.ActivitySolicitarOrcamentoBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.OrdemServico;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
-@RequiresApi(api = Build.VERSION_CODES.O)
 public class TelaSolicitarOrcamento extends AppCompatActivity implements View.OnClickListener {
     private String nomeServicoID;
     private FirebaseFirestore db;
     private Map<String, Object> data;
     private OrdemServico ordemServico;
     private ActivitySolicitarOrcamentoBinding binding;
-    private static final String TAG = "Orçamento";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +39,7 @@ public class TelaSolicitarOrcamento extends AppCompatActivity implements View.On
         setContentView(view);
         db = FirebaseFirestore.getInstance();
         data = new HashMap<>();
-        TooltipCompat.setTooltipText(binding.imBVoltar, "Voltar");
+        TooltipCompat.setTooltipText(binding.imBVoltar, Constante.VOLTAR);
         binding.imBVoltar.setOnClickListener(v -> telaMenu());
         binding.btnCadastrar.setOnClickListener(this);
     }
@@ -60,62 +57,61 @@ public class TelaSolicitarOrcamento extends AppCompatActivity implements View.On
         String nomeServico = Objects.requireNonNull(binding.txtNomeServico.getText()).toString()
                 .trim();
         String descricao = Objects.requireNonNull(binding.txtDescricao.getText()).toString().trim();
-        final String STATUS = "-";
-        final Double PRECO = 0.0;
-        ordemServico = new OrdemServico(nomeServico, descricao, PRECO);
+
+        ordemServico = new OrdemServico(nomeServico, descricao, Constante.PRECO_ZERO);
         if (ordemServico.getNomeServico().isEmpty() || ordemServico.getDescricao().isEmpty()) {
-            Toast.makeText(this, "ERRO - Preencha todos os campos",
+            Toast.makeText(this, Constante.PREENCHA_TODOS_CAMPOS,
                     Toast.LENGTH_LONG).show();
         } else {
             String usuarioID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser())
                     .getUid();
-            data.put("nomeServico", ordemServico.getNomeServico().toLowerCase());
-            data.put("descricao", ordemServico.getDescricao().toLowerCase());
-            data.put("preco", ordemServico.getPreco());
-            data.put("dataAbertura", ordemServico.getDataAbertura());
-            data.put("dataFinalizacao", ordemServico.getDatafinalizacao());
-            data.put("status", STATUS);
-            DocumentReference docRef = db.collection("usuarios").document(usuarioID)
-                    .collection("ordensDeServicos").document();
-            Query query = db.collection("usuarios").document(usuarioID)
-                    .collection("ordensDeServicos")
-                    .whereEqualTo("nomeServico", ordemServico.getNomeServico().toLowerCase());
+            data.put(Constante.NOME_SERVICO, ordemServico.getNomeServico().toLowerCase());
+            data.put(Constante.DESCRICAO, ordemServico.getDescricao().toLowerCase());
+            data.put(Constante.PRECO, ordemServico.getPreco());
+            data.put(Constante.DATA_ABERTURA, ordemServico.getDataAbertura());
+            data.put(Constante.DATA_FINALIZACAO, ordemServico.getDatafinalizacao());
+            data.put(Constante.STATUS, Constante.STATUS_SEM_VALOR);
+            DocumentReference docRef = db.collection(Constante.USUARIOS).document(usuarioID)
+                    .collection(Constante.ORDENS_SERVICOS).document();
+            Query query = db.collection(Constante.USUARIOS).document(usuarioID)
+                    .collection(Constante.ORDENS_SERVICOS)
+                    .whereEqualTo(Constante.NOME_SERVICO, ordemServico.getNomeServico().toLowerCase());
             query.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document :
                             Objects.requireNonNull(task.getResult())) {
-                        nomeServicoID = Objects.requireNonNull(document.getString("nomeServico"))
-                                .trim();
+                        nomeServicoID = Objects.requireNonNull(document.getString(
+                                Constante.NOME_SERVICO)).trim();
                     }
                     if (Objects.equals(ordemServico.getNomeServico().toLowerCase(), nomeServicoID)) {
-                        Log.d(TAG, "Nome do Serviço: " + nomeServicoID);
-                        Toast.makeText(TelaSolicitarOrcamento.this, "Serviço já existe",
+                        Log.d(Constante.TAG_ORCAMENTO, Constante.NOME_SERVICO_DOIS_PONTOS + nomeServicoID);
+                        Toast.makeText(TelaSolicitarOrcamento.this, Constante.SERVICO_JA_EXISTE,
                                 Toast.LENGTH_LONG).show();
                     } else {
                         docRef.set(data).addOnSuccessListener(unused -> {
-                            Log.d(TAG, "ID gerado: " + docRef.getId());
+                            Log.d(Constante.TAG_ORCAMENTO, Constante.ID_GERADO + docRef.getId());
                             binding.pBCarregar.setVisibility(View.VISIBLE);
                             binding.btnCadastrar.setEnabled(false);
                             new Handler().postDelayed(() -> {
                                 Toast.makeText(TelaSolicitarOrcamento.this,
-                                        "Orçamento enviado.", Toast.LENGTH_LONG).show();
+                                        Constante.ORCAMENTO_ENVIADO, Toast.LENGTH_LONG).show();
                                 Objects.requireNonNull(binding.txtNomeServico.getText()).clear();
                                 Objects.requireNonNull(binding.txtDescricao.getText()).clear();
                                 binding.txtNomeServico.clearFocus();
                                 binding.txtDescricao.clearFocus();
                                 binding.pBCarregar.setVisibility(View.INVISIBLE);
                                 binding.btnCadastrar.setEnabled(true);
-                            }, 2000);
+                            }, Constante.TEMPO_2SEG);
                         })
                                 .addOnFailureListener(e -> {
-                                    Log.w(TAG, "Erro ao adicionar o documento", e);
+                                    Log.w(Constante.TAG_ORCAMENTO, Constante.ERRO_ADD_DOCUMENTO, e);
                                     Toast.makeText(TelaSolicitarOrcamento.this,
-                                            "Erro ao enviar orçamento!",
+                                            Constante.ERRO_ENVIAR_ORCAMENTO,
                                             Toast.LENGTH_LONG).show();
                                 });
                     }
                 } else {
-                    Log.d(TAG, "Erro ao consultar documento: ", task.getException());
+                    Log.d(Constante.TAG_ORCAMENTO, Constante.ERRO_OBTER_DOCUMENTO, task.getException());
                 }
             });
         }

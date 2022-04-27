@@ -20,6 +20,7 @@ import java.util.List;
 
 import br.com.fatec.projetoOrdensDeServicos.entity.OrdemServico;
 import br.com.fatec.projetoOrdensDeServicos.R;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
 public class OrdemServicoAdapter extends RecyclerView.Adapter<OrdemServicoAdapter
         .OrdemServicoViewHolder> implements Filterable {
@@ -59,7 +60,7 @@ public class OrdemServicoAdapter extends RecyclerView.Adapter<OrdemServicoAdapte
                 .toUpperCase().concat(ordemServico.getDescricao().substring(1)));
         holder.txtStatus.setText(ordemServico.getStatus().substring(0, 1)
                 .concat(ordemServico.getStatus().substring(1).toLowerCase()));
-        TooltipCompat.setTooltipText(holder.imBChat, "Chat de suporte");
+        TooltipCompat.setTooltipText(holder.imBChat, Constante.CHAT_SUPORTE);
     }
 
     @Override
@@ -97,7 +98,6 @@ public class OrdemServicoAdapter extends RecyclerView.Adapter<OrdemServicoAdapte
         @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
         protected void publishResults(CharSequence constraint, @NonNull FilterResults results) {
-
             ordemServicos.clear();
             ordemServicos.addAll((List) results.values);
             notifyDataSetChanged();

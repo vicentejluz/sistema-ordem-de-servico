@@ -26,6 +26,7 @@ import java.util.Objects;
 
 import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityCadastroBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.Cliente;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 import br.com.fatec.projetoOrdensDeServicos.util.Mascara;
 
 public class TelaCadastro extends AppCompatActivity implements View.OnClickListener {
@@ -35,7 +36,6 @@ public class TelaCadastro extends AppCompatActivity implements View.OnClickListe
     private Map<String, Object> data;
     private String usuarioID;
     private ActivityCadastroBinding binding;
-    private static final String TAG = "Cadastro";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class TelaCadastro extends AppCompatActivity implements View.OnClickListe
         cadastrar = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         data = new HashMap<>();
-        TooltipCompat.setTooltipText(binding.imBVoltar, "Voltar");
+        TooltipCompat.setTooltipText(binding.imBVoltar, Constante.VOLTAR);
         binding.imBVoltar.setOnClickListener(v -> telaLogin());
         binding.btnCadastrar.setOnClickListener(this);
         binding.txtTel.addTextChangedListener(Mascara.insert(Mascara.MaskType.TEL, binding.txtTel));
@@ -60,46 +60,45 @@ public class TelaCadastro extends AppCompatActivity implements View.OnClickListe
         String senha = Objects.requireNonNull(binding.txtSenha.getText()).toString().trim();
         String confirmarSenha = Objects.requireNonNull(binding.txtConfirmarSenha.getText())
                 .toString().trim();
-        String privilegio = "Cliente";
-        String statusConta = "Desbloqueado";
-        cliente = new Cliente(nome, email, telefone, statusConta);
+        cliente = new Cliente(nome, email, telefone, Constante.DESBLOQUEADO);
         if (cliente.getNome().isEmpty() || cliente.getTelefone().isEmpty()
                 || cliente.getEmail().isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty()) {
-            Toast.makeText(TelaCadastro.this, "ERRO - Preencha todos os campos",
+            Toast.makeText(TelaCadastro.this, Constante.PREENCHA_TODOS_CAMPOS,
                     Toast.LENGTH_LONG).show();
         } else {
             if (telefone.length() < 15) {
-                Toast.makeText(TelaCadastro.this, "Telefone Inválido",
+                Toast.makeText(TelaCadastro.this, Constante.TELEFONE_INVALIDO,
                         Toast.LENGTH_LONG).show();
             } else {
                 if (!senha.equals(confirmarSenha)) {
                     Toast.makeText(TelaCadastro.this,
-                            "ERRO: As senhas não batem!!", Toast.LENGTH_SHORT).show();
+                            Constante.SENHAS_NAO_BATEM, Toast.LENGTH_SHORT).show();
                 } else {
                     cadastrar.createUserWithEmailAndPassword(cliente.getEmail(), senha)
                             .addOnCompleteListener(this, task -> {
                                 if (task.isSuccessful()) {
-                                    data.put("nome", cliente.getNome());
-                                    data.put("email", cliente.getEmail());
-                                    data.put("telefone", cliente.getTelefone());
-                                    data.put("statusConta", cliente.getStatusConta());
-                                    data.put("privilegio", privilegio);
+                                    data.put(Constante.NOME, cliente.getNome());
+                                    data.put(Constante.EMAIL, cliente.getEmail());
+                                    data.put(Constante.TELEFONE, cliente.getTelefone());
+                                    data.put(Constante.STATUS_CONTA, cliente.getStatusConta());
+                                    data.put(Constante.PRIVILEGIO, Constante.CLIENTE);
                                     usuarioID = Objects.requireNonNull(FirebaseAuth.getInstance()
                                             .getCurrentUser()).getUid();
-                                    DocumentReference docRef = db.collection("usuarios")
+                                    DocumentReference docRef = db.collection(Constante.USUARIOS)
                                             .document(usuarioID);
                                     docRef.set(data)
                                             .addOnSuccessListener(unused ->
-                                                    Log.d(TAG, "ID gerado: " + docRef.getId()))
+                                                    Log.d(Constante.TAG_CADASTRO,
+                                                            Constante.ID_GERADO + docRef.getId()))
                                             .addOnFailureListener(e ->
-                                                    Log.w(TAG, "Erro ao adicionar o documento",
-                                                            e));
+                                                    Log.w(Constante.TAG_CADASTRO,
+                                                            Constante.ERRO_ADD_DOCUMENTO, e));
 
                                     binding.pBCarregar.setVisibility(View.VISIBLE);
                                     binding.btnCadastrar.setEnabled(false);
                                     new Handler().postDelayed(() -> {
                                         Toast.makeText(TelaCadastro.this,
-                                                "Registrado com sucesso:"
+                                                Constante.REGISTRADO_SUCESSO
                                                         + cliente.getEmail(), Toast.LENGTH_LONG)
                                                 .show();
                                         FirebaseAuth.getInstance().signOut();
@@ -107,28 +106,28 @@ public class TelaCadastro extends AppCompatActivity implements View.OnClickListe
                                                 TelaLogin.class);
                                         startActivity(intent);
                                         finish();
-                                    }, 3000);
+                                    }, Constante.TEMPO_3SEG);
                                 } else {
                                     String erro;
                                     try {
                                         throw Objects.requireNonNull(task.getException());
                                     } catch (FirebaseAuthWeakPasswordException e) {
-                                        erro = "Digite uma senha com no mínimo 6 caracteres";
+                                        erro = Constante.MINIMO_6_CARAC;
 
                                     } catch (FirebaseAuthUserCollisionException e) {
-                                        erro = "Usuário já existe";
+                                        erro = Constante.USUARIO_JA_EXISTE;
 
                                     } catch (FirebaseAuthInvalidCredentialsException e) {
-                                        erro = "E-mail Inválido";
+                                        erro = Constante.EMAIL_INVALIDO;
 
                                     } catch (Exception e) {
-                                        erro = "Erro ao cadastrar usário";
+                                        erro = Constante.ERRO_CADASTRAR_USUARIO;
                                     }
 
                                     Toast.makeText(TelaCadastro.this, erro,
                                             Toast.LENGTH_SHORT).show();
-                                    Log.w(TAG, "CriarUsuarioFalhou: " + erro,
-                                            task.getException());
+                                    Log.w(Constante.TAG_CADASTRO, Constante.CRIAR_USUARIO_FALHOU
+                                            + erro, task.getException());
                                 }
                             });
                 }
@@ -145,7 +144,7 @@ public class TelaCadastro extends AppCompatActivity implements View.OnClickListe
         registrarUsuario();
     }
 
-    public  void telaLogin(){
+    public void telaLogin() {
         onBackPressed();
     }
 }

@@ -3,7 +3,6 @@ package br.com.fatec.projetoOrdensDeServicos.telaAdmin;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -33,6 +31,7 @@ import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityInformacaoServicoAdminBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.OrdemServico;
 import br.com.fatec.projetoOrdensDeServicos.entity.StatusOrdemServico;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 import br.com.fatec.projetoOrdensDeServicos.util.MascaraMonetaria;
 
 public class TelaInformacaoServicoAdmin extends AppCompatActivity implements View.OnClickListener,
@@ -40,17 +39,16 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
     private String nomeServicoCons, nomeServico, descricao, dataFinalizacao;
     private String usuarioID, status, dataAbertura, item, idServico;
     private Timestamp timestampDataAbertura, timestampDataFinalizacao;
-    private final Locale LOCALE = new Locale("pt", "BR");
-    private final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy",
-            LOCALE);
+    private final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(Constante.MASCARA_DATA_BR,
+            Constante.LOCALE);
     private ActivityInformacaoServicoAdminBinding binding;
     private FirebaseFirestore db;
     private Double preco;
     private Map<String, Object> data;
     private OrdemServico ordemServico;
-    DecimalFormat decimalFormat = new DecimalFormat("0.00");
+    DecimalFormat decimalFormat = new DecimalFormat(Constante.ZERO);
     String[] statusOrdensServicos = new String[]{
-            "AGUARDANDO APROVAÇÃO",
+            Constante.AGUARDANDO_APROVACAO,
             StatusOrdemServico.ABERTA.name(),
             StatusOrdemServico.CANCELADA.name(),
             StatusOrdemServico.FINALIZADA.name()
@@ -66,10 +64,11 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
         setContentView(view);
         binding.btnAtualizar.setOnClickListener(this);
         binding.txtStatus.setOnItemSelectedListener(this);
-        binding.txtPreco.addTextChangedListener(new MascaraMonetaria(binding.txtPreco, LOCALE));
+        binding.txtPreco.addTextChangedListener(new MascaraMonetaria(binding.txtPreco, Constante.LOCALE));
         db = FirebaseFirestore.getInstance();
         arrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_item,
                 statusServicos) {
+
             @Override
             public boolean isEnabled(int position) {
                 if (status.equals(StatusOrdemServico.CANCELADA.name())) {
@@ -131,9 +130,9 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
     }
 
     private void carregarOrdemServico() {
-        Query query = db.collection("usuarios").document(usuarioID)
-                .collection("ordensDeServicos")
-                .whereEqualTo("nomeServico", nomeServicoCons);
+        Query query = db.collection(Constante.USUARIOS).document(usuarioID)
+                .collection(Constante.ORDENS_SERVICOS)
+                .whereEqualTo(Constante.NOME_SERVICO, nomeServicoCons);
         query.get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -141,24 +140,25 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
                                 Objects.requireNonNull(task.getResult())) {
                             idServico = document.getId();
                             nomeServico = Objects.requireNonNull(document
-                                    .getString("nomeServico"));
+                                    .getString(Constante.NOME_SERVICO));
                             descricao = Objects.requireNonNull(document
-                                    .getString("descricao"));
-                            timestampDataAbertura = document.getTimestamp("dataAbertura");
-                            status = document.getString("status");
-                            preco = document.getDouble("preco");
-                            timestampDataFinalizacao = document.getTimestamp("dataFinalizacao");
+                                    .getString(Constante.DESCRICAO));
+                            timestampDataAbertura = document.getTimestamp(Constante.DATA_ABERTURA);
+                            status = document.getString(Constante.STATUS);
+                            preco = document.getDouble(Constante.PRECO);
+                            timestampDataFinalizacao = document.getTimestamp(
+                                    Constante.DATA_FINALIZACAO);
                         }
                         setarDadosServico();
                         status();
                     } else {
-                        Toast.makeText(this, "Serviços não encontrado",
+                        Toast.makeText(this, Constante.SERVICO_NAO_ENCONTRADO,
                                 Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
-    @SuppressLint("SetTextI18n")
+
     private void setarDadosServico() {
         ordemServico = new OrdemServico(nomeServico, descricao, preco,
                 timestampDataAbertura, timestampDataFinalizacao, status);
@@ -176,7 +176,7 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
 
         binding.txtDataAbertura.setText(dataAbertura);
         binding.txtDataFinal.setText(dataFinalizacao);
-        if (status.equals("-"))
+        if (status.equals(Constante.STATUS_SEM_VALOR))
             binding.txtStatus.setSelection(0);
         else if (status.equals(StatusOrdemServico.ABERTA.name()))
             binding.txtStatus.setSelection(1);
@@ -187,17 +187,15 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
     }
 
     private void dadosItemLista() {
-        nomeServicoCons = "Nome do serviço não foi setado";
-        usuarioID = "ID do usuário não foi setado";
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            nomeServicoCons = extras.getString("nomeServico");
-            usuarioID = extras.getString("usuarioID");
+            nomeServicoCons = extras.getString(Constante.NOME_SERVICO);
+            usuarioID = extras.getString(Constante.USUARIO_ID);
         }
     }
 
     private void status() {
-        if (binding.txtStatus.getSelectedItem().toString().equals("AGUARDANDO APROVAÇÃO")) {
+        if (binding.txtStatus.getSelectedItem().toString().equals(Constante.AGUARDANDO_APROVACAO)) {
             binding.txtStatus.setEnabled(false);
         } else {
             if (binding.txtStatus.getSelectedItem().toString().equals(StatusOrdemServico.ABERTA
@@ -242,35 +240,32 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
         ordemServico.setPreco(Double.valueOf(conStringPreco));
         if ((item.equals(StatusOrdemServico.CANCELADA.name())) &&
                 (!preco.equals(ordemServico.getPreco()))) {
-            Toast.makeText(this, "Para Mudar preço depois de cancelado mude status" +
-                    " para, aguardando aprovação!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Constante.MUDAR_CANCELADO_TEM_AGUARDANDO_APROVACAO,
+                    Toast.LENGTH_LONG).show();
             onStart();
         } else if ((item.equals(StatusOrdemServico.ABERTA.name())) &&
                 (!preco.equals(ordemServico.getPreco()))) {
-            Toast.makeText(this, "Para Mudar preço depois de Aberto o cliente tem que " +
-                    "cancelar o serviço", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Constante.MUDAR_ABERTO_TEM_CANCELAR, Toast.LENGTH_LONG).show();
             onStart();
-        } else if (item.equals("AGUARDANDO APROVAÇÃO") && ordemServico.getPreco() == 0.0) {
-            Toast.makeText(this, "Adicione um valor maior que 0 para preço",
-                    Toast.LENGTH_LONG).show();
+        } else if (item.equals(Constante.AGUARDANDO_APROVACAO) && ordemServico.getPreco() == 0.0) {
+            Toast.makeText(this, Constante.ADD_VALOR_MAIOR_0, Toast.LENGTH_LONG).show();
         } else {
-            if (item.equals("AGUARDANDO APROVAÇÃO"))
-                item = "-";
+            if (item.equals(Constante.AGUARDANDO_APROVACAO))
+                item = Constante.STATUS_SEM_VALOR;
             if (!status.equals(item))
-                data.put("status", item);
+                data.put(Constante.STATUS, item);
             ordemServico.setDescricao(Objects.requireNonNull(binding.txtDescricao.getText())
                     .toString().trim());
             if (!descricao.equals(ordemServico.getDescricao()))
-                data.put("descricao", ordemServico.getDescricao());
+                data.put(Constante.DESCRICAO, ordemServico.getDescricao());
             if (!preco.equals(ordemServico.getPreco()))
-                data.put("preco", ordemServico.getPreco());
+                data.put(Constante.PRECO, ordemServico.getPreco());
             if (item.equals(StatusOrdemServico.FINALIZADA.name()))
-                data.put("dataFinalizacao", timestamp);
-            DocumentReference docRef = db.collection("usuarios").document(usuarioID)
-                    .collection("ordensDeServicos").document(idServico);
+                data.put(Constante.DATA_ABERTURA, timestamp);
+            DocumentReference docRef = db.collection(Constante.USUARIOS).document(usuarioID)
+                    .collection(Constante.ORDENS_SERVICOS).document(idServico);
             docRef.update(data);
-            Toast.makeText(this, "Atualizado com sucesso!!",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Constante.ATUALIZADO_SUCESSO, Toast.LENGTH_LONG).show();
             binding.txtPreco.clearFocus();
             binding.txtDescricao.clearFocus();
             onStart();

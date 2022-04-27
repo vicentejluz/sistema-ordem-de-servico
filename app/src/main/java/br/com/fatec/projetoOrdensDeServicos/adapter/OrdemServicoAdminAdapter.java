@@ -17,10 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.entity.OrdemServico;
+import br.com.fatec.projetoOrdensDeServicos.entity.StatusOrdemServico;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
 public class OrdemServicoAdminAdapter extends RecyclerView.Adapter<OrdemServicoAdminAdapter
         .OrdemServicoAdminViewHolder> implements Filterable {
@@ -29,7 +30,6 @@ public class OrdemServicoAdminAdapter extends RecyclerView.Adapter<OrdemServicoA
     List<OrdemServico> ordemServicosFull;
     List<String> clientes;
     String cliente;
-    private final Locale LOCALE = new Locale("pt", "BR");
     private final OrdemServicoAdminClickListener ordemServicoAdminClickListener;
     private final ExcluirOrdemServicoClickListener excluirOrdemServicoClickListener;
     private final ChatServicoClickListener chatServicoClickListener;
@@ -72,30 +72,29 @@ public class OrdemServicoAdminAdapter extends RecyclerView.Adapter<OrdemServicoA
         }
 
         holder.imBExcluir.setEnabled(true);
-        TooltipCompat.setTooltipText(holder.imBExcluir, "Excluir Serviço");
+        TooltipCompat.setTooltipText(holder.imBExcluir, Constante.EXCLUIR_SERVICO);
         holder.txtNomeServico.setText(ordemServico.getNomeServico().substring(0, 1)
                 .toUpperCase().concat(ordemServico.getNomeServico().substring(1)));
         holder.txtDescricao.setText(ordemServico.getDescricao().substring(0, 1)
                 .toUpperCase().concat(ordemServico.getDescricao().substring(1)));
-        holder.txtPreco.setText(NumberFormat.getCurrencyInstance(LOCALE).format(ordemServico
+        holder.txtPreco.setText(NumberFormat.getCurrencyInstance(Constante.LOCALE).format(ordemServico
                 .getPreco()));
         holder.txtStatus.setText(ordemServico.getStatus().substring(0, 1)
                 .concat(ordemServico.getStatus().substring(1).toLowerCase()));
-        TooltipCompat.setTooltipText(holder.imBChat, "Chat");
+        TooltipCompat.setTooltipText(holder.imBChat, Constante.CHAT);
         restricoes(holder, ordemServico);
     }
 
-    @SuppressLint("SetTextI18n")
     private void restricoes(OrdemServicoAdminViewHolder holder,
                             @NonNull OrdemServico ordemServico) {
-        if (!ordemServico.getStatus().equalsIgnoreCase("FINALIZADA")) {
+        if (!ordemServico.getStatus().equalsIgnoreCase(StatusOrdemServico.FINALIZADA.name())) {
             holder.imBExcluir.setBackgroundResource(R.drawable.industry_trash_icon);
             holder.imBExcluir.setEnabled(false);
         } else
             holder.imBExcluir.setBackgroundResource(R.drawable.user_trash_full_icon);
 
         if (ordemServico.getPreco() == 0.0)
-            holder.txtPreco.setText("Sem preço");
+            holder.txtPreco.setText(Constante.SEM_PRECO);
     }
 
     @Override
@@ -148,10 +147,10 @@ public class OrdemServicoAdminAdapter extends RecyclerView.Adapter<OrdemServicoA
         ExcluirOrdemServicoClickListener excluirOrdemServicoClickListener;
         ChatServicoClickListener chatServicoClickListener;
 
-        public OrdemServicoAdminViewHolder(@NonNull View itemView, OrdemServicoAdminClickListener
-                ordemServicoAdminClickListener, ExcluirOrdemServicoClickListener
-                excluirOrdemServicoClickListener, ChatServicoClickListener
-                chatServicoClickListener) {
+        public OrdemServicoAdminViewHolder(@NonNull View itemView,
+                                           OrdemServicoAdminClickListener ordemServicoAdminClickListener,
+                                           ExcluirOrdemServicoClickListener excluirOrdemServicoClickListener,
+                                           ChatServicoClickListener chatServicoClickListener) {
             super(itemView);
             txtNomeServico = itemView.findViewById(R.id.txtNomeServico);
             txtDescricao = itemView.findViewById(R.id.txtDescricao);
@@ -169,7 +168,6 @@ public class OrdemServicoAdminAdapter extends RecyclerView.Adapter<OrdemServicoA
             itemView.setOnClickListener(this);
         }
 
-        @SuppressLint("NonConstantResourceId")
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.imBExcluir)

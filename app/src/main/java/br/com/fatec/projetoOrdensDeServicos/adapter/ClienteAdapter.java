@@ -17,6 +17,7 @@ import java.util.List;
 
 import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.entity.Cliente;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
 public class ClienteAdapter extends RecyclerView.Adapter<ClienteAdapter.ClienteViewHolder> {
     Context context;
@@ -58,21 +59,20 @@ public class ClienteAdapter extends RecyclerView.Adapter<ClienteAdapter.ClienteV
         holder.txtEmail.setText(cliente.getEmail());
         holder.txtTel.setText(cliente.getTelefone());
         holder.txtStatusConta.setText(cliente.getStatusConta());
-        TooltipCompat.setTooltipText(holder.imBEditar, "Editar conta");
+        TooltipCompat.setTooltipText(holder.imBEditar, Constante.EDITAR_CONTA);
         StatusConta(holder, cliente, backgroundOff);
     }
 
     private void StatusConta(ClienteViewHolder holder, @NonNull Cliente cliente,
                              Drawable backgroundOff) {
-        int red = 0x70F43636;
-        if (cliente.getStatusConta().equalsIgnoreCase("Bloqueado")) {
+        if (cliente.getStatusConta().equalsIgnoreCase(Constante.BLOQUEADO)) {
             holder.imBStatusConta.setBackgroundResource(R.drawable.lock_icon);
-            backgroundOff.setTint(red);
+            backgroundOff.setTint(Constante.RED);
             holder.itemView.setBackground(backgroundOff);
-            TooltipCompat.setTooltipText(holder.imBStatusConta, "Bloqueado");
+            TooltipCompat.setTooltipText(holder.imBStatusConta, Constante.BLOQUEADO);
         } else {
             holder.imBStatusConta.setBackgroundResource(R.drawable.unlock_icon);
-            TooltipCompat.setTooltipText(holder.imBStatusConta, "Desbloqueado");
+            TooltipCompat.setTooltipText(holder.imBStatusConta, Constante.DESBLOQUEADO);
             backgroundOff.setTint(Color.WHITE);
             holder.itemView.setBackground(backgroundOff);
         }

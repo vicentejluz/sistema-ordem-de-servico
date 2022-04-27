@@ -9,8 +9,10 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
+
 public class TelaAbertura extends AppCompatActivity {
-    private final Timer TIMER = new Timer();
+    public final Timer TIMER = new Timer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,7 +20,6 @@ public class TelaAbertura extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_abertura);
 
-        final int TEMPO_ABERTURA = 3000;
         TIMER.schedule(new TimerTask() {
 
             @Override
@@ -27,6 +28,6 @@ public class TelaAbertura extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, TEMPO_ABERTURA);
+        }, Constante.TEMPO_3SEG);
     }
 }

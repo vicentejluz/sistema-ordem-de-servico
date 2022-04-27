@@ -21,7 +21,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Objects;
 
 import br.com.fatec.projetoOrdensDeServicos.R;
@@ -30,6 +29,7 @@ import br.com.fatec.projetoOrdensDeServicos.adapter.OrdemServicoAdminAdapter;
 import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityConsultarBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.OrdemServico;
 import br.com.fatec.projetoOrdensDeServicos.entity.StatusOrdemServico;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
 public class TelaConsultarServicoAdmin extends AppCompatActivity {
     private FirebaseFirestore db;
@@ -37,17 +37,14 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
     private ArrayList<String> clientes, usuarioID, getStatus;
     private ArrayList<Double> getPrecos;
     private ActivityConsultarBinding binding;
-    private final Locale LOCALE = new Locale("pt", "BR");
     private OrdemServicoAdminAdapter ordemServicoAdminAdapter;
     private boolean isStatus;
     private Double preco = 0.0, getPreco = 0.0;
     private String ordemServicoID, statusServico;
-    private final String IDCHAT = "pb6IdWjCKogMvZlnpH4bl13lCM22AD";
     private OrdemServicoAdminAdapter.OrdemServicoAdminClickListener ordemServicoAdminClickListener;
     private OrdemServicoAdminAdapter.ExcluirOrdemServicoClickListener excluirOrdemServicoClickListener;
     private OrdemServicoAdminAdapter.ChatServicoClickListener chatServicoClickListener;
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,22 +72,17 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
         binding.bNVStatus.setOnItemSelectedListener(item -> {
             limparListas();
             setarVisibilidadeTextView(View.VISIBLE);
-            switch (item.getItemId()) {
-                case R.id.itmTodos:
-                    isStatus = true;
-                    listarMundancaEvento();
-                    break;
-                case R.id.itmAberta:
-                    listarMundancaEventoStatus(StatusOrdemServico.ABERTA.name());
-                    break;
-                case R.id.itmCancelada:
-                    setarVisibilidadeTextView(View.GONE);
-                    listarMundancaEventoStatus(StatusOrdemServico.CANCELADA.name());
-                    break;
-                case R.id.itmFinalizada:
-                    isStatus = false;
-                    listarMundancaEventoStatus(StatusOrdemServico.FINALIZADA.name());
-                    break;
+            if (item.getItemId() == R.id.itmTodos) {
+                isStatus = true;
+                listarMundancaEvento();
+            } else if (item.getItemId() == R.id.itmAberta) {
+                listarMundancaEventoStatus(StatusOrdemServico.ABERTA.name());
+            } else if (item.getItemId() == R.id.itmCancelada) {
+                setarVisibilidadeTextView(View.GONE);
+                listarMundancaEventoStatus(StatusOrdemServico.CANCELADA.name());
+            } else {
+                isStatus = false;
+                listarMundancaEventoStatus(StatusOrdemServico.FINALIZADA.name());
             }
             return true;
         });
@@ -117,12 +109,12 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
     private void confirmarExcluirOrderServico() {
         excluirOrdemServicoClickListener = (v, position) -> {
             AlertDialog.Builder confirmaExclusao = new AlertDialog.Builder(this);
-            confirmaExclusao.setTitle("Atenção!!");
-            confirmaExclusao.setMessage("Tem certeza que deseja excluir: " +
-                    ordemServicos.get(position).getNomeServico() + "?");
-            confirmaExclusao.setPositiveButton("Sim", (dialogInterface, i) ->
+            confirmaExclusao.setTitle(Constante.ATENCAO);
+            confirmaExclusao.setMessage(Constante.CERTEZA_EXCLUIR +
+                    ordemServicos.get(position).getNomeServico() + Constante.PONTO_INTERROGACAO);
+            confirmaExclusao.setPositiveButton(Constante.SIM, (dialogInterface, i) ->
                     excluirOrderServico(position));
-            confirmaExclusao.setNegativeButton("Não", null);
+            confirmaExclusao.setNegativeButton(Constante.NAO, null);
             confirmaExclusao.setCancelable(false);
             confirmaExclusao.create().show();
         };
@@ -131,9 +123,9 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
     private void chatServico() {
         chatServicoClickListener = (v, position) -> {
             Intent intent = new Intent(this, TelaChat.class);
-            intent.putExtra("nomeServico", ordemServicos.get(position).getNomeServico());
-            intent.putExtra("cliente", clientes.get(position));
-            intent.putExtra("usuarioID", usuarioID.get(position));
+            intent.putExtra(Constante.NOME_SERVICO, ordemServicos.get(position).getNomeServico());
+            intent.putExtra(Constante.CLIENTE, clientes.get(position));
+            intent.putExtra(Constante.USUARIO_ID, usuarioID.get(position));
             startActivity(intent);
         };
     }
@@ -141,17 +133,17 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
     private void setOnClickListener() {
         ordemServicoAdminClickListener = (v, position) -> {
             Intent intent = new Intent(this, TelaInformacaoServicoAdmin.class);
-            intent.putExtra("nomeServico", ordemServicos.get(position).getNomeServico());
-            intent.putExtra("usuarioID", usuarioID.get(position));
+            intent.putExtra(Constante.NOME_SERVICO, ordemServicos.get(position).getNomeServico());
+            intent.putExtra(Constante.USUARIO_ID, usuarioID.get(position));
             startActivity(intent);
         };
     }
 
     private void listarMundancaEvento() {
-        db.collection("usuarios")
+        db.collection(Constante.USUARIOS)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        Log.e("Erro no Firestore", error.getMessage());
+                        Log.e(Constante.TAG_ERRO_FIRESTORE, error.getMessage());
                     } else {
                         for (DocumentChange dc : Objects.requireNonNull(value)
                                 .getDocumentChanges()) {
@@ -162,14 +154,13 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
                 });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void adicionarValores(@NonNull DocumentChange dtc) {
-        db.collection("usuarios").document(dtc.getDocument().getId())
-                .collection("ordensDeServicos").orderBy("nomeServico",
+        db.collection(Constante.USUARIOS).document(dtc.getDocument().getId())
+                .collection(Constante.ORDENS_SERVICOS).orderBy(Constante.NOME_SERVICO,
                 Query.Direction.ASCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        Log.e("Erro no Firestore", error.getMessage());
+                        Log.e(Constante.TAG_ERRO_FIRESTORE, error.getMessage());
                     } else {
                         procuraServico(Objects.requireNonNull(value), dtc);
                     }
@@ -177,27 +168,25 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
     }
 
     private void listarMundancaEventoStatus(String status) {
-        db.collection("usuarios")
-                .addSnapshotListener((value, error) -> {
-                    if (error != null) {
-                        Log.e("Erro no Firestore", error.getMessage());
-                    } else {
-                        for (DocumentChange dc : Objects.requireNonNull(value)
-                                .getDocumentChanges()) {
-                            adicionarValoresStatus(dc, status);
-                        }
-                    }
-                });
+        db.collection(Constante.USUARIOS).addSnapshotListener((value, error) -> {
+            if (error != null) {
+                Log.e(Constante.TAG_ERRO_FIRESTORE, error.getMessage());
+            } else {
+                for (DocumentChange dc : Objects.requireNonNull(value)
+                        .getDocumentChanges()) {
+                    adicionarValoresStatus(dc, status);
+                }
+            }
+        });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void adicionarValoresStatus(@NonNull DocumentChange dtc, String status) {
-        db.collection("usuarios").document(dtc.getDocument().getId())
-                .collection("ordensDeServicos").whereEqualTo("status", status)
-                .orderBy("nomeServico", Query.Direction.ASCENDING)
+        db.collection(Constante.USUARIOS).document(dtc.getDocument().getId())
+                .collection(Constante.ORDENS_SERVICOS).whereEqualTo(Constante.STATUS, status)
+                .orderBy(Constante.NOME_SERVICO, Query.Direction.ASCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        Log.e("Erro no Firestore", error.getMessage());
+                        Log.e(Constante.TAG_ERRO_FIRESTORE, error.getMessage());
                     } else {
                         statusServico = status;
                         procuraServico(Objects.requireNonNull(value), dtc);
@@ -211,20 +200,20 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
             if (dc.getType() == DocumentChange.Type.ADDED) {
                 ordemServicos.add(dc.getDocument().toObject(
                         OrdemServico.class));
-                getStatus.add(dc.getDocument().getString("status"));
+                getStatus.add(dc.getDocument().getString(Constante.STATUS));
                 if (statusServico == null) {
                     for (String s : getStatus) {
                         if (s.equals(StatusOrdemServico.ABERTA.name()) ||
                                 s.equals(StatusOrdemServico.FINALIZADA.name())) {
-                            getPrecos.add(dc.getDocument().getDouble("preco"));
+                            getPrecos.add(dc.getDocument().getDouble(Constante.PRECO));
                         }
                     }
                 } else {
                     if (!statusServico.equals(StatusOrdemServico.CANCELADA.name()))
-                        getPrecos.add(dc.getDocument().getDouble("preco"));
+                        getPrecos.add(dc.getDocument().getDouble(Constante.PRECO));
                 }
 
-                clientes.add(dtc.getDocument().getString("nome"));
+                clientes.add(dtc.getDocument().getString(Constante.NOME));
                 usuarioID.add(dtc.getDocument().getId());
                 getStatus.clear();
             }
@@ -235,77 +224,75 @@ public class TelaConsultarServicoAdmin extends AppCompatActivity {
             preco += p;
         if (preco != null) {
             getPreco = preco;
-            binding.txtTotalPreco.setText(NumberFormat.getCurrencyInstance(LOCALE).format(getPreco));
+            binding.txtTotalPreco.setText(NumberFormat.getCurrencyInstance(Constante.LOCALE)
+                    .format(getPreco));
             preco = 0.0;
         }
     }
 
     private void excluirOrderServico(int position) {
-        db.collection("usuarios").document(usuarioID.get(position))
-                .collection("ordensDeServicos")
-                .whereEqualTo("nomeServico", ordemServicos.get(position).getNomeServico())
+        db.collection(Constante.USUARIOS).document(usuarioID.get(position))
+                .collection(Constante.ORDENS_SERVICOS)
+                .whereEqualTo(Constante.NOME_SERVICO, ordemServicos.get(position).getNomeServico())
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document :
-                                Objects.requireNonNull(task.getResult())) {
-                            Log.d("Ver1:", document.getId());
+                        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult()))
                             ordemServicoID = document.getId();
-                        }
                         ExcluirComentario(position);
-                        db.collection("usuarios").document(usuarioID.get(position))
-                                .collection("ordensDeServicos").document(ordemServicoID)
+                        db.collection(Constante.USUARIOS).document(usuarioID.get(position))
+                                .collection(Constante.ORDENS_SERVICOS).document(ordemServicoID)
                                 .delete();
-                        Toast.makeText(this, "Serviço deletado com sucesso",
+                        Toast.makeText(this, Constante.SERVICO_DELETADO_SUCESSO,
                                 Toast.LENGTH_LONG).show();
                         getPreco = getPreco - ordemServicos.get(position).getPreco();
-                        if(!isStatus)
+                        if (!isStatus)
                             binding.bNVStatus.setSelectedItemId(R.id.itmFinalizada);
                         else
                             binding.bNVStatus.setSelectedItemId(R.id.itmTodos);
                     } else {
-                        Log.d("ERROR:", "Erro ao achar documento: ",
+                        Log.d(Constante.TAG_ERRO, Constante.ERRO_OBTER_DOCUMENTO,
                                 task.getException());
                     }
                 });
     }
 
     private void ExcluirComentario(int position) {
-        db.collection("usuarios").document(usuarioID.get(position))
-                .collection("ordensDeServicos")
+        db.collection(Constante.USUARIOS).document(usuarioID.get(position))
+                .collection(Constante.ORDENS_SERVICOS)
                 .document(ordemServicoID)
-                .collection("comentarios")
+                .collection(Constante.COMENTARIO)
                 .document(usuarioID.get(position))
-                .collection(IDCHAT).get()
+                .collection(Constante.IDCHAT).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot documento :
                                 Objects.requireNonNull(task.getResult())) {
-                            db.collection("usuarios").document(usuarioID.get(position))
-                                    .collection("ordensDeServicos")
+                            db.collection(Constante.USUARIOS).document(usuarioID.get(position))
+                                    .collection(Constante.ORDENS_SERVICOS)
                                     .document(ordemServicoID)
-                                    .collection("comentarios")
+                                    .collection(Constante.COMENTARIO)
                                     .document(usuarioID.get(position))
-                                    .collection(IDCHAT)
+                                    .collection(Constante.IDCHAT)
                                     .document(documento.getId()).delete();
                         }
                     }
                 });
-        db.collection("usuarios").document(usuarioID.get(position))
-                .collection("ordensDeServicos")
+        db.collection(Constante.USUARIOS).document(usuarioID.get(position))
+                .collection(Constante.ORDENS_SERVICOS)
                 .document(ordemServicoID)
-                .collection("comentarios")
-                .document(IDCHAT)
+                .collection(Constante.COMENTARIO)
+                .document(Constante.IDCHAT)
                 .collection(usuarioID.get(position)).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot documento :
                                 Objects.requireNonNull(task.getResult())) {
-                            db.collection("usuarios").document(usuarioID.get(position))
-                                    .collection("ordensDeServicos")
+                            db.collection(Constante.USUARIOS).document(usuarioID.get(position))
+                                    .collection(Constante.ORDENS_SERVICOS)
                                     .document(ordemServicoID)
-                                    .collection("comentarios")
-                                    .document(IDCHAT)
+                                    .collection(Constante.COMENTARIO)
+                                    .document(Constante.IDCHAT)
                                     .collection(usuarioID.get(position))
                                     .document(documento.getId()).delete();
                         }

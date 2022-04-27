@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -20,12 +19,12 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Objects;
 
 import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityAlterarSenhaBinding;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
 public class TelaAlterarSenha extends AppCompatActivity implements View.OnClickListener {
     private ActivityAlterarSenhaBinding binding;
     private String novaSenha;
     private FirebaseUser usuario;
-    private static final String TAG = "Alterar senha";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +48,16 @@ public class TelaAlterarSenha extends AppCompatActivity implements View.OnClickL
         String senhaAntiga = Objects.requireNonNull(binding.txtSenhaAntiga.getText()).toString()
                 .trim();
         if (novaSenha.isEmpty() || confimarSenha.isEmpty() || senhaAntiga.isEmpty()) {
-            Toast.makeText(this, "ERRO - Preencha todos os campos",
+            Toast.makeText(this, Constante.PREENCHA_TODOS_CAMPOS,
                     Toast.LENGTH_LONG).show();
         } else {
             if (!novaSenha.equals(confimarSenha)) {
                 Toast.makeText(this,
-                        "ERRO: As senhas não batem!!", Toast.LENGTH_SHORT).show();
+                        Constante.SENHAS_NAO_BATEM, Toast.LENGTH_SHORT).show();
             } else {
                 if (novaSenha.equals(senhaAntiga)) {
-                    Toast.makeText(this,
-                            "Senha inválida - igual senha antiga!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, Constante.IGUAL_SENHA_ANTIGA, Toast.LENGTH_SHORT)
+                            .show();
                 } else {
                     AuthCredential credential = EmailAuthProvider
                             .getCredential(Objects.requireNonNull(usuario.getEmail()), senhaAntiga);
@@ -66,10 +65,9 @@ public class TelaAlterarSenha extends AppCompatActivity implements View.OnClickL
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
                                     confimarAlteracaoSenha();
-                                    Log.d(TAG, "User re-authenticated.");
                                 } else {
                                     Toast.makeText(TelaAlterarSenha.this,
-                                            "Senha Inválida!", Toast.LENGTH_LONG)
+                                            Constante.SENHA_INVALIDA, Toast.LENGTH_LONG)
                                             .show();
                                     Objects.requireNonNull(binding.txtNovaSenha.getText()).clear();
                                     Objects.requireNonNull(binding.txtConfirmarSenha.getText())
@@ -88,34 +86,32 @@ public class TelaAlterarSenha extends AppCompatActivity implements View.OnClickL
 
     private void confimarAlteracaoSenha() {
         AlertDialog.Builder alterarSenha = new AlertDialog.Builder(TelaAlterarSenha.this);
-        alterarSenha.setTitle("Atenção!!");
-        alterarSenha.setMessage("Tem certeza que deseja alterar a senha?");
-        alterarSenha.setPositiveButton("Sim", (dialogInterface, i) -> usuario
+        alterarSenha.setTitle(Constante.ATENCAO);
+        alterarSenha.setMessage(Constante.CERTEZA_ALTERAR_SENHA);
+        alterarSenha.setPositiveButton(Constante.SIM, (dialogInterface, i) -> usuario
                 .updatePassword(novaSenha).addOnCompleteListener(tarefa -> {
                     if (tarefa.isSuccessful()) {
-                        Log.d(TAG, "Senha Alterada");
                         binding.btnConfirmar.setEnabled(false);
                         binding.pBCarregar.setVisibility(View.VISIBLE);
                         binding.btnConfirmar.setEnabled(false);
                         new Handler().postDelayed(() -> {
                             Toast.makeText(TelaAlterarSenha.this,
-                                    "Senha alterada com sucesso", Toast.LENGTH_LONG).show();
+                                    Constante.SENHA_ALTERADO_SUCESSO, Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(TelaAlterarSenha.this,
                                     TelaConfigConta.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             finish();
-                        }, 3000);
+                        }, Constante.TEMPO_3SEG);
                     } else {
                         String erro;
                         try {
                             throw Objects.requireNonNull(tarefa.getException());
                         } catch (FirebaseAuthWeakPasswordException e) {
-                            erro = "Digite uma senha com no mínimo 6 caracteres";
+                            erro = Constante.MINIMO_6_CARAC;
                         } catch (Exception e) {
-                            erro = "Falha ao atualizar a Senha.";
+                            erro = Constante.FALHA_ATUALIZAR_SENHA;
                         }
-                        Log.w(TAG, "Erro: Atualização falhou", tarefa.getException());
                         Toast.makeText(TelaAlterarSenha.this, erro, Toast.LENGTH_LONG)
                                 .show();
                         Objects.requireNonNull(binding.txtNovaSenha.getText()).clear();
@@ -124,7 +120,7 @@ public class TelaAlterarSenha extends AppCompatActivity implements View.OnClickL
                         binding.txtSenhaAntiga.requestFocus();
                     }
                 }));
-        alterarSenha.setNegativeButton("Não", null);
+        alterarSenha.setNegativeButton(Constante.NAO, null);
         alterarSenha.setCancelable(false);
         alterarSenha.create().show();
     }

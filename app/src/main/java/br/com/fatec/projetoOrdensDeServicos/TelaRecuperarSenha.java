@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Objects;
 
 import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityRecuperarSenhaBinding;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
 public class TelaRecuperarSenha extends AppCompatActivity implements View.OnClickListener {
     private ActivityRecuperarSenhaBinding binding;
@@ -34,12 +35,10 @@ public class TelaRecuperarSenha extends AppCompatActivity implements View.OnClic
     }
 
     private void recuperarSenha() {
-        String email = Objects.requireNonNull(binding.txtEmail.getText())
-                .toString().trim();
+        String email = Objects.requireNonNull(binding.txtEmail.getText()).toString().trim();
 
         if (email.isEmpty()) {
-            Toast.makeText(this, "ERRO - Preencha o campo E-mail",
-                    Toast.LENGTH_LONG).show();
+            Toast.makeText(this, Constante.PREENCHA_CAMPO_EMAIL, Toast.LENGTH_LONG).show();
         } else {
             enviarEmail(email);
         }
@@ -52,17 +51,15 @@ public class TelaRecuperarSenha extends AppCompatActivity implements View.OnClic
                     binding.btnRecuperarSenha.setEnabled(false);
                     new Handler().postDelayed(() -> {
                         Toast.makeText(TelaRecuperarSenha.this,
-                                "Email de recuperação de senha enviado",
-                                Toast.LENGTH_LONG).show();
+                                Constante.EMAIL_RECUPERACAO_INVALIDO, Toast.LENGTH_LONG).show();
                         Intent intent = new
                                 Intent(TelaRecuperarSenha.this, TelaLogin.class);
                         startActivity(intent);
                         finish();
-                    }, 3000);
+                    }, Constante.TEMPO_3SEG);
                 })
                 .addOnFailureListener(e -> Toast.makeText(TelaRecuperarSenha.this,
-                        "E-mail inválido ou não encontrado",
-                        Toast.LENGTH_LONG).show()
+                        Constante.EMAIL_INVALIDO_OU_NAO_ENCONTRADO, Toast.LENGTH_LONG).show()
                 );
     }
 }

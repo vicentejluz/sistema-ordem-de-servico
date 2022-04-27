@@ -1,10 +1,8 @@
 package br.com.fatec.projetoOrdensDeServicos.telaCliente;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TooltipCompat;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,11 +14,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
-import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.TelaLogin;
 import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityMenuClienteBinding;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
-public class TelaMenuCliente extends AppCompatActivity implements View.OnClickListener {
+public class TelaMenuCliente extends AppCompatActivity {
     private ActivityMenuClienteBinding binding;
     private final FirebaseFirestore DB = FirebaseFirestore.getInstance();
 
@@ -30,41 +28,22 @@ public class TelaMenuCliente extends AppCompatActivity implements View.OnClickLi
         binding = ActivityMenuClienteBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        TooltipCompat.setTooltipText(binding.btnSair, "Deslogar");
-        binding.btnSair.setOnClickListener(this);
-        binding.btnCliente.setOnClickListener(this);
-        binding.btnOrdemServico.setOnClickListener(this);
-        binding.btnConsultarServico.setOnClickListener(this);
+        TooltipCompat.setTooltipText(binding.btnSair, Constante.DESLOGAR);
+        binding.btnSair.setOnClickListener(v -> telaSair());
+        binding.btnCliente.setOnClickListener(v -> telaConfigConta());
+        binding.btnOrdemServico.setOnClickListener(v -> telaOrdemDeServico());
+        binding.btnConsultarServico.setOnClickListener(v -> telaConsultarServico());
     }
 
-    @SuppressLint("NonConstantResourceId")
-    public void onClick(@NonNull View v) {
-        switch (v.getId()) {
-            case R.id.btnSair:
-                telaSair();
-                break;
-            case R.id.btnCliente:
-                telaConfigConta();
-                break;
-            case R.id.btnOrdemServico:
-                telaOrdemDeServico();
-                break;
-            case R.id.btnConsultarServico:
-                telaConsultarServico();
-                break;
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onStart() {
         super.onStart();
         String usuarioID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-        DocumentReference docRef = DB.collection("usuarios").document(usuarioID);
+        DocumentReference docRef = DB.collection(Constante.USUARIOS).document(usuarioID);
         docRef.addSnapshotListener((documentSnapshot, error) -> {
             if (documentSnapshot != null) {
-                binding.txtCliente.setText("Usuário: " + documentSnapshot
-                        .getString("nome"));
+                String nomeUsuario = Constante.USUARIO + documentSnapshot.getString(Constante.NOME);
+                binding.txtCliente.setText(nomeUsuario);
             }
         });
 
@@ -87,7 +66,7 @@ public class TelaMenuCliente extends AppCompatActivity implements View.OnClickLi
 
     public void telaSair() {
         FirebaseAuth.getInstance().signOut();
-        Toast.makeText(this, "Conta deslogada com sucesso", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, Constante.CONTA_DESLOGADA_SUCESSO, Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, TelaLogin.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
