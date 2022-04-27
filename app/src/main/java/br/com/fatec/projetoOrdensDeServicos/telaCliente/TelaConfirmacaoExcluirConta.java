@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -22,14 +21,13 @@ import java.util.Objects;
 
 import br.com.fatec.projetoOrdensDeServicos.TelaLogin;
 import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityConfirmacaoExcluirContaBinding;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
 public class TelaConfirmacaoExcluirConta extends AppCompatActivity implements View.OnClickListener {
     private final FirebaseFirestore DB = FirebaseFirestore.getInstance();
     private String usuarioID;
     private FirebaseUser usuario;
     private ActivityConfirmacaoExcluirContaBinding binding;
-    private final String IDCHAT = "pb6IdWjCKogMvZlnpH4bl13lCM22AD";
-    private static final String TAG = "Confirmação de Excluir";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +47,19 @@ public class TelaConfirmacaoExcluirConta extends AppCompatActivity implements Vi
 
     public void excluirConta() {
         Intent intent = getIntent();
-        String nome = intent.getStringExtra("chaveNome");
+        String nome = intent.getStringExtra(Constante.CHAVE_NOME);
         String senha = Objects.requireNonNull(binding.txtSenha.getText()).toString().trim();
         if (senha.isEmpty()) {
-            binding.txtInputLayout1.setError("ERRO - Preencha o campo");
+            binding.txtInputLayout1.setError(Constante.PREENCHA_TODOS_CAMPOS);
         } else {
             AuthCredential credential = EmailAuthProvider
                     .getCredential(Objects.requireNonNull(usuario.getEmail()), senha);
             usuario.reauthenticate(credential)
                     .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful())
                             confirmarExclusao(nome);
-                            Log.d(TAG, "Usuário reautenticado.");
-                        } else {
-                            binding.txtInputLayout1.setError("Senha inválida");
+                        else {
+                            binding.txtInputLayout1.setError(Constante.SENHA_INVALIDA);
                             Objects.requireNonNull(binding.txtSenha.getText()).clear();
                         }
                     });
@@ -71,105 +68,97 @@ public class TelaConfirmacaoExcluirConta extends AppCompatActivity implements Vi
     }
 
     private void confirmarExclusao(String nome) {
-        DB.collection("usuarios").document(usuarioID)
-                .collection("ordensDeServicos").get().addOnCompleteListener(task -> {
+        DB.collection(Constante.USUARIOS).document(usuarioID)
+                .collection(Constante.ORDENS_SERVICOS).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 AlertDialog.Builder confirmaExclusao = new AlertDialog.Builder(this);
-                confirmaExclusao.setTitle("Atenção!!");
-                confirmaExclusao.setMessage("Tem certeza que deseja excluir sua conta: " +
-                        nome + "?");
-                confirmaExclusao.setPositiveButton("Sim", (dialogInterface, i) -> {
+                confirmaExclusao.setTitle(Constante.ATENCAO);
+                confirmaExclusao.setMessage(Constante.CERTEZA_EXCLUIR_CONTA + nome +
+                        Constante.PONTO_INTERROGACAO);
+                confirmaExclusao.setPositiveButton(Constante.SIM, (dialogInterface, i) -> {
                     for (QueryDocumentSnapshot documento :
                             Objects.requireNonNull(task.getResult())) {
                         ExcluirComentario(documento);
-                        DB.collection("usuarios").document(usuarioID)
-                                .collection("ordensDeServicos")
+                        DB.collection(Constante.USUARIOS).document(usuarioID)
+                                .collection(Constante.ORDENS_SERVICOS)
                                 .document(documento.getId()).delete();
                     }
                     deletarUsuario();
                 });
-                confirmaExclusao.setNegativeButton("Não", (dialogInterface, i) -> {
-                    Intent intent = new Intent(this,
-                            TelaConfigConta.class);
-                    intent.setFlags(Intent
-                            .FLAG_ACTIVITY_CLEAR_TOP);
+                confirmaExclusao.setNegativeButton(Constante.NAO, (dialogInterface, i) -> {
+                    Intent intent = new Intent(this, TelaConfigConta.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
                 });
                 confirmaExclusao.setCancelable(false);
                 confirmaExclusao.create().show();
 
-            } else {
-                Log.w(TAG, "Erro ao deletar documento!");
-                Toast.makeText(TelaConfirmacaoExcluirConta.this,
-                        "Erro ao deletar conta!", Toast.LENGTH_LONG)
-                        .show();
-            }
+            } else
+                Toast.makeText(TelaConfirmacaoExcluirConta.this, Constante.ERRO_DELETAR_CONTA,
+                        Toast.LENGTH_LONG).show();
         });
     }
 
     private void deletarUsuario() {
-        DB.collection("usuarios").document(usuarioID).delete()
+        DB.collection(Constante.USUARIOS).document(usuarioID).delete()
                 .addOnSuccessListener(unused -> usuario.delete().addOnCompleteListener(
                         tarefaDoc -> {
                             if (tarefaDoc.isSuccessful()) {
-                                Log.d(TAG, "Documento deletado com sucesso!");
                                 binding.pBCarregar.setVisibility(View.VISIBLE);
                                 binding.btnExcluir.setEnabled(false);
                                 new Handler().postDelayed(() -> {
                                     Toast.makeText(TelaConfirmacaoExcluirConta.this,
-                                            "Conta deletada com sucesso", Toast.LENGTH_LONG)
+                                            Constante.CONTA_DELETADO_SUCESSO, Toast.LENGTH_LONG)
                                             .show();
                                     Intent intent = new Intent(this, TelaLogin.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
                                     finish();
-                                }, 3000);
+                                }, Constante.TEMPO_3SEG);
                             }
                         }))
-                .addOnFailureListener(e -> {
-                    Log.w(TAG, "Erro ao deletar documento!", e);
-                    Toast.makeText(this, "Erro ao deletar conta!", Toast.LENGTH_LONG)
-                            .show();
-                });
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, Constante.ERRO_DELETAR_CONTA, Toast.LENGTH_LONG)
+                                .show());
     }
 
     private void ExcluirComentario(@NonNull QueryDocumentSnapshot documento) {
-        DB.collection("usuarios").document(usuarioID)
-                .collection("ordensDeServicos")
+        DB.collection(Constante.USUARIOS).document(usuarioID)
+                .collection(Constante.ORDENS_SERVICOS)
                 .document(documento.getId())
-                .collection("comentarios")
+                .collection(Constante.COMENTARIO)
                 .document(Objects.requireNonNull(FirebaseAuth.getInstance().getUid()))
-                .collection(IDCHAT).get()
+                .collection(Constante.IDCHAT).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot documentoCom :
                                 Objects.requireNonNull(task.getResult())) {
-                            DB.collection("usuarios").document(usuarioID)
-                                    .collection("ordensDeServicos")
+                            DB.collection(Constante.USUARIOS).document(usuarioID)
+                                    .collection(Constante.ORDENS_SERVICOS)
                                     .document(documento.getId())
-                                    .collection("comentarios")
+                                    .collection(Constante.COMENTARIO)
                                     .document(FirebaseAuth.getInstance().getUid())
-                                    .collection(IDCHAT)
+                                    .collection(Constante.IDCHAT)
                                     .document(documentoCom.getId()).delete();
                         }
                     }
                 });
-        DB.collection("usuarios").document(usuarioID)
-                .collection("ordensDeServicos")
+        DB.collection(Constante.USUARIOS).document(usuarioID)
+                .collection(Constante.ORDENS_SERVICOS)
                 .document(documento.getId())
-                .collection("comentarios")
-                .document(IDCHAT)
+                .collection(Constante.COMENTARIO)
+                .document(Constante.IDCHAT)
                 .collection(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot documentoCom :
                                 Objects.requireNonNull(task.getResult())) {
-                            DB.collection("usuarios").document(usuarioID)
-                                    .collection("ordensDeServicos")
+                            DB.collection(Constante.USUARIOS).document(usuarioID)
+                                    .collection(Constante.ORDENS_SERVICOS)
                                     .document(documento.getId())
-                                    .collection("comentarios")
-                                    .document(IDCHAT)
+                                    .collection(Constante.COMENTARIO)
+                                    .document(Constante.IDCHAT)
                                     .collection(FirebaseAuth.getInstance().getUid())
                                     .document(documentoCom.getId()).delete();
                         }

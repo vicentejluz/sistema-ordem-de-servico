@@ -1,9 +1,7 @@
 package br.com.fatec.projetoOrdensDeServicos.telaCliente;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,28 +17,26 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityInformacaoServicoBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.OrdemServico;
 import br.com.fatec.projetoOrdensDeServicos.entity.StatusOrdemServico;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 import br.com.fatec.projetoOrdensDeServicos.util.MascaraMonetaria;
 
-public class TelaInformacaoServico extends AppCompatActivity implements View.OnClickListener {
+public class TelaInformacaoServico extends AppCompatActivity {
     private String nomeServicoCons, descricao, nomeServico, dataAbertura, status, dataFinalizacao;
     private Double preco;
     private ActivityInformacaoServicoBinding binding;
     private String usuarioID, idServico;
     private Map<String, Object> data;
     private Timestamp timestampDataAbertura, timestampDataFinalizacao;
-    private final Locale LOCALE = new Locale("pt", "BR");
-    private final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", LOCALE);
+    private final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat(
+            Constante.MASCARA_DATA_BR, Constante.LOCALE);
     private FirebaseFirestore db;
     private OrdemServico ordemServico;
-    private static final String TAG = "Informação do servico";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +44,8 @@ public class TelaInformacaoServico extends AppCompatActivity implements View.OnC
         binding = ActivityInformacaoServicoBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        binding.btnAceitar.setOnClickListener(this);
-        binding.btnCancelar.setOnClickListener(this);
+        binding.btnAceitar.setOnClickListener(v -> aceitarServico());
+        binding.btnCancelar.setOnClickListener(v -> cancelarServico());
         db = FirebaseFirestore.getInstance();
         data = new HashMap<>();
         dadosItemLista();
@@ -61,53 +57,40 @@ public class TelaInformacaoServico extends AppCompatActivity implements View.OnC
         carregarOrdemServico();
     }
 
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public void onClick(@NonNull View v) {
-        switch (v.getId()) {
-            case R.id.btnAceitar:
-                aceitarServico();
-                break;
-            case R.id.btnCancelar:
-                cancelarServico();
-                break;
-        }
-    }
-
     private void carregarOrdemServico() {
         usuarioID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser())
                 .getUid();
-        Query query = db.collection("usuarios").document(usuarioID)
-                .collection("ordensDeServicos")
-                .whereEqualTo("nomeServico", nomeServicoCons);
+        Query query = db.collection(Constante.USUARIOS).document(usuarioID)
+                .collection(Constante.ORDENS_SERVICOS)
+                .whereEqualTo(Constante.NOME_SERVICO, nomeServicoCons);
         query.get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document :
                                 Objects.requireNonNull(task.getResult())) {
                             nomeServico = Objects.requireNonNull(document
-                                    .getString("nomeServico"));
+                                    .getString(Constante.NOME_SERVICO));
                             descricao = Objects.requireNonNull(document
-                                    .getString("descricao"));
-                            timestampDataAbertura = document.getTimestamp("dataAbertura");
-                            status = document.getString("status");
-                            preco = document.getDouble("preco");
-                            timestampDataFinalizacao = document.getTimestamp("dataFinalizacao");
+                                    .getString(Constante.DESCRICAO));
+                            timestampDataAbertura = document.getTimestamp(Constante.DATA_ABERTURA);
+                            status = document.getString(Constante.STATUS);
+                            preco = document.getDouble(Constante.PRECO);
+                            timestampDataFinalizacao = document.getTimestamp(
+                                    Constante.DATA_FINALIZACAO);
                         }
                         setarDadosServico();
                         status();
                     } else {
-                        Toast.makeText(this, "Serviços não encontrado",
+                        Toast.makeText(this, Constante.SERVICO_NAO_ENCONTRADO,
                                 Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
     private void dadosItemLista() {
-        nomeServicoCons = "Nome do serviço não foi setado";
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            nomeServicoCons = extras.getString("nomeServico");
+            nomeServicoCons = extras.getString(Constante.NOME_SERVICO);
         }
     }
 
@@ -136,11 +119,10 @@ public class TelaInformacaoServico extends AppCompatActivity implements View.OnC
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private void setarDadosServico() {
         ordemServico = new OrdemServico(nomeServico, descricao, preco,
                 timestampDataAbertura, timestampDataFinalizacao, status);
-        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        DecimalFormat decimalFormat = new DecimalFormat(Constante.ZERO);
 
         if (ordemServico.getDataAbertura() != null)
             dataAbertura = SIMPLE_DATE_FORMAT.format(ordemServico.getDataAbertura().toDate());
@@ -154,12 +136,13 @@ public class TelaInformacaoServico extends AppCompatActivity implements View.OnC
         if (preco <= 0)
             binding.txtPreco.setText("");
         else {
-            binding.txtPreco.addTextChangedListener(new MascaraMonetaria(binding.txtPreco, LOCALE));
+            binding.txtPreco.addTextChangedListener(new MascaraMonetaria(binding.txtPreco,
+                    Constante.LOCALE));
             binding.txtPreco.setText(decimalFormat.format(ordemServico.getPreco()));
         }
         binding.txtDataAbertura.setText(dataAbertura);
         binding.txtDataFinal.setText(dataFinalizacao);
-        if (status.equals("-")) {
+        if (status.equals(Constante.STATUS_SEM_VALOR)) {
             binding.txtStatus.setText("");
         } else {
             binding.txtStatus.setText(ordemServico.getStatus());
@@ -171,25 +154,26 @@ public class TelaInformacaoServico extends AppCompatActivity implements View.OnC
         Timestamp timestamp = Timestamp.now();
         usuarioID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser())
                 .getUid();
-        data.put("status", StatusOrdemServico.ABERTA.name());
+        data.put(Constante.STATUS, StatusOrdemServico.ABERTA.name());
         if (ordemServico.getDataAbertura() == null)
-            data.put("dataAbertura", timestamp);
-        Query queryCancel = db.collection("usuarios").document(usuarioID)
-                .collection("ordensDeServicos")
-                .whereEqualTo("nomeServico", nomeServicoCons);
+            data.put(Constante.DATA_ABERTURA, timestamp);
+        Query queryCancel = db.collection(Constante.USUARIOS).document(usuarioID)
+                .collection(Constante.ORDENS_SERVICOS)
+                .whereEqualTo(Constante.NOME_SERVICO, nomeServicoCons);
         queryCancel.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document :
                         Objects.requireNonNull(task.getResult())) {
                     idServico = document.getId();
                 }
-                DocumentReference docRef = db.collection("usuarios")
-                        .document(usuarioID).collection("ordensDeServicos")
+                DocumentReference docRef = db.collection(Constante.USUARIOS)
+                        .document(usuarioID).collection(Constante.ORDENS_SERVICOS)
                         .document(idServico);
                 docRef.update(data);
                 onStart();
             } else {
-                Log.d(TAG, "Erro ao consultar documento: ", task.getException());
+                Log.d(Constante.TAG_INFORMACAO_SERVICO, Constante.ERRO_OBTER_DOCUMENTO,
+                        task.getException());
             }
         });
     }
@@ -199,23 +183,24 @@ public class TelaInformacaoServico extends AppCompatActivity implements View.OnC
         binding.btnAceitar.setEnabled(false);
         usuarioID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser())
                 .getUid();
-        data.put("status", StatusOrdemServico.CANCELADA.name());
-        Query queryCancel = db.collection("usuarios").document(usuarioID)
-                .collection("ordensDeServicos")
-                .whereEqualTo("nomeServico", nomeServicoCons);
+        data.put(Constante.STATUS, StatusOrdemServico.CANCELADA.name());
+        Query queryCancel = db.collection(Constante.USUARIOS).document(usuarioID)
+                .collection(Constante.ORDENS_SERVICOS)
+                .whereEqualTo(Constante.NOME_SERVICO, nomeServicoCons);
         queryCancel.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document :
                         Objects.requireNonNull(task.getResult())) {
                     idServico = document.getId();
                 }
-                DocumentReference docRef = db.collection("usuarios")
-                        .document(usuarioID).collection("ordensDeServicos")
+                DocumentReference docRef = db.collection(Constante.USUARIOS)
+                        .document(usuarioID).collection(Constante.ORDENS_SERVICOS)
                         .document(idServico);
                 docRef.update(data);
                 onStart();
             } else {
-                Log.d(TAG, "Erro ao consultar documento: ", task.getException());
+                Log.d(Constante.TAG_INFORMACAO_SERVICO, Constante.ERRO_OBTER_DOCUMENTO,
+                        task.getException());
             }
         });
     }

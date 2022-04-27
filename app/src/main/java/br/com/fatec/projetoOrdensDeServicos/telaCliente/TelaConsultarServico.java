@@ -25,7 +25,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Objects;
 
 import br.com.fatec.projetoOrdensDeServicos.R;
@@ -34,6 +33,7 @@ import br.com.fatec.projetoOrdensDeServicos.adapter.OrdemServicoAdapter;
 import br.com.fatec.projetoOrdensDeServicos.databinding.ActivityConsultarBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.OrdemServico;
 import br.com.fatec.projetoOrdensDeServicos.entity.StatusOrdemServico;
+import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
 public class TelaConsultarServico extends AppCompatActivity {
     private FirebaseFirestore db;
@@ -46,24 +46,22 @@ public class TelaConsultarServico extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private SearchView searchView;
     private Double preco = 0.0;
-    private final Locale LOCALE = new Locale("pt", "BR");
     private Boolean isProgressDialog = true;
     private OrdemServicoAdapter.OrdemServicoClickListener ordemServicoClickListener;
     private OrdemServicoAdapter.ChatServicoClickListener chatServicoClickListener;
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityConsultarBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        binding.txtTotalPreco.setText(NumberFormat.getCurrencyInstance(LOCALE).format(preco));
+        binding.txtTotalPreco.setText(NumberFormat.getCurrencyInstance(Constante.LOCALE).format(preco));
         binding.bNVStatus.getMenu().clear();
         binding.bNVStatus.inflateMenu(R.menu.menu_item_bottom_servico);
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
-        progressDialog.setMessage("Buscando Dados...");
+        progressDialog.setMessage(Constante.BUSCANDO_DADOS);
         progressDialog.show();
         binding.rVConsultar.setHasFixedSize(true);
         binding.rVConsultar.setLayoutManager(new LinearLayoutManager(this));
@@ -77,21 +75,15 @@ public class TelaConsultarServico extends AppCompatActivity {
         binding.bNVStatus.setOnItemSelectedListener(item -> {
             limparListas();
             setarVisibilidadeTextView(View.VISIBLE);
-            switch (item.getItemId()) {
-                case R.id.itmTodos:
-                    listarMundancaEvento();
-                    break;
-                case R.id.itmAberta:
-                    listarMundancaEventoStatus(StatusOrdemServico.ABERTA.name());
-                    break;
-                case R.id.itmCancelada:
-                    setarVisibilidadeTextView(View.GONE);
-                    listarMundancaEventoStatus(StatusOrdemServico.CANCELADA.name());
-                    break;
-                case R.id.itmFinalizada:
-                    listarMundancaEventoStatus(StatusOrdemServico.FINALIZADA.name());
-                    break;
-            }
+            if (item.getItemId() == R.id.itmTodos)
+                listarMundancaEvento();
+            else if (item.getItemId() == R.id.itmAberta)
+                listarMundancaEventoStatus(StatusOrdemServico.ABERTA.name());
+            else if (item.getItemId() == R.id.itmCancelada) {
+                setarVisibilidadeTextView(View.GONE);
+                listarMundancaEventoStatus(StatusOrdemServico.CANCELADA.name());
+            } else
+                listarMundancaEventoStatus(StatusOrdemServico.FINALIZADA.name());
             return true;
         });
     }
@@ -110,7 +102,7 @@ public class TelaConsultarServico extends AppCompatActivity {
     private void setOnClickListener() {
         ordemServicoClickListener = (v, position) -> {
             Intent intent = new Intent(this, TelaInformacaoServico.class);
-            intent.putExtra("nomeServico", ordemServicos.get(position).getNomeServico());
+            intent.putExtra(Constante.NOME_SERVICO, ordemServicos.get(position).getNomeServico());
             startActivity(intent);
             searchView.setQuery("", false);
             searchView.setIconified(true);
@@ -120,26 +112,25 @@ public class TelaConsultarServico extends AppCompatActivity {
     private void chatServico() {
         chatServicoClickListener = (v, position) -> {
             Intent intent = new Intent(this, TelaChat.class);
-            intent.putExtra("nomeServico", ordemServicos.get(position).getNomeServico());
-            intent.putExtra("usuarioID", usuarioID);
+            intent.putExtra(Constante.NOME_SERVICO, ordemServicos.get(position).getNomeServico());
+            intent.putExtra(Constante.USUARIO_ID, usuarioID);
             startActivity(intent);
             searchView.setQuery("", false);
             searchView.setIconified(true);
         };
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void listarMundancaEvento() {
         usuarioID = Objects.requireNonNull(FirebaseAuth.getInstance()
                 .getCurrentUser()).getUid();
-        db.collection("usuarios").document(usuarioID)
-                .collection("ordensDeServicos").orderBy("nomeServico",
+        db.collection(Constante.USUARIOS).document(usuarioID)
+                .collection(Constante.ORDENS_SERVICOS).orderBy(Constante.NOME_SERVICO,
                 Query.Direction.ASCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
                         if (progressDialog.isShowing())
                             progressDialog.dismiss();
-                        Log.e("Erro no Firestore", error.getMessage());
+                        Log.e(Constante.TAG_ERRO_FIRESTORE, error.getMessage());
                         return;
                     }
                     if (value != null) {
@@ -147,16 +138,17 @@ public class TelaConsultarServico extends AppCompatActivity {
                             new Handler().postDelayed(() -> {
                                 Intent intent = new Intent(this, TelaMenuCliente.class);
                                 startActivity(intent);
-                                Toast.makeText(this, "Serviços não encontrado",
+                                Toast.makeText(this, Constante.SERVICO_NAO_ENCONTRADO,
                                         Toast.LENGTH_LONG).show();
                                 progressDialog.dismiss();
 
-                            }, 3000);
+                            }, Constante.TEMPO_3SEG);
 
                         } else {
                             statusServico = null;
                             if (isProgressDialog) {
-                                new Handler().postDelayed(() -> procuraServico(value), 2000);
+                                new Handler().postDelayed(() -> procuraServico(value),
+                                        Constante.TEMPO_2SEG);
                                 isProgressDialog = false;
                             } else
                                 procuraServico(value);
@@ -165,16 +157,15 @@ public class TelaConsultarServico extends AppCompatActivity {
                 });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void listarMundancaEventoStatus(String status) {
         String usuarioID = Objects.requireNonNull(FirebaseAuth.getInstance()
                 .getCurrentUser()).getUid();
-        db.collection("usuarios").document(usuarioID)
-                .collection("ordensDeServicos").whereEqualTo("status", status)
-                .orderBy("nomeServico", Query.Direction.ASCENDING)
+        db.collection(Constante.USUARIOS).document(usuarioID)
+                .collection(Constante.ORDENS_SERVICOS).whereEqualTo(Constante.STATUS, status)
+                .orderBy(Constante.NOME_SERVICO, Query.Direction.ASCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        Log.e("Erro no Firestore", error.getMessage());
+                        Log.e(Constante.TAG_ERRO_FIRESTORE, error.getMessage());
                     } else {
                         statusServico = status;
                         procuraServico(Objects.requireNonNull(value));
@@ -188,7 +179,7 @@ public class TelaConsultarServico extends AppCompatActivity {
         MenuItem menuItem = menu.findItem(R.id.sVBuscar);
         searchView = (SearchView) menuItem.getActionView();
         searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.setQueryHint("Buscar");
+        searchView.setQueryHint(Constante.BUSCAR);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -212,17 +203,17 @@ public class TelaConsultarServico extends AppCompatActivity {
             if (dc.getType() == DocumentChange.Type.ADDED) {
                 ordemServicos.add(dc.getDocument().toObject(
                         OrdemServico.class));
-                getStatus.add(dc.getDocument().getString("status"));
+                getStatus.add(dc.getDocument().getString(Constante.STATUS));
                 if (statusServico == null) {
                     for (String s : getStatus) {
                         if (s.equals(StatusOrdemServico.ABERTA.name()) ||
                                 s.equals(StatusOrdemServico.FINALIZADA.name())) {
-                            getPrecos.add(dc.getDocument().getDouble("preco"));
+                            getPrecos.add(dc.getDocument().getDouble(Constante.PRECO));
                         }
                     }
                 } else {
                     if (!statusServico.equals(StatusOrdemServico.CANCELADA.name()))
-                        getPrecos.add(dc.getDocument().getDouble("preco"));
+                        getPrecos.add(dc.getDocument().getDouble(Constante.PRECO));
                 }
                 getStatus.clear();
             }
@@ -235,7 +226,8 @@ public class TelaConsultarServico extends AppCompatActivity {
         for (Double p : getPrecos)
             preco += p;
         if (preco != null) {
-            binding.txtTotalPreco.setText(NumberFormat.getCurrencyInstance(LOCALE).format(preco));
+            binding.txtTotalPreco.setText(NumberFormat.getCurrencyInstance(Constante.LOCALE)
+                    .format(preco));
             preco = 0.0;
         }
         progressDialog.dismiss();
