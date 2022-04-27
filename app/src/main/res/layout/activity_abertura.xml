@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed-light"
-            android:text="@string/sistema_de_gerenciamento_de_ordem_de_servi_o"
+            android:text="@string/sistema_de_gerenciamento_de_ordem_de_servico"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="@color/azul_ab"

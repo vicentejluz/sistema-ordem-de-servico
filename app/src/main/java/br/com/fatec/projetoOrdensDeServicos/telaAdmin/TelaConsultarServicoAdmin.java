@@ -1,6 +1,5 @@
 package br.com.fatec.projetoOrdensDeServicos.telaAdmin;
 
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;

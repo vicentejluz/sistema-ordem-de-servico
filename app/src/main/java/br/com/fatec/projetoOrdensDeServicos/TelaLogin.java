@@ -30,7 +30,6 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
     private final FirebaseFirestore DB = FirebaseFirestore.getInstance();
     private ActivityLoginBinding binding;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

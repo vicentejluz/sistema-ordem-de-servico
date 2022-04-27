@@ -12,7 +12,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Objects;
 
-
 public class MascaraMonetaria implements TextWatcher {
     private final WeakReference<TextInputEditText> editTextWeakReference;
     private final Locale locale;
