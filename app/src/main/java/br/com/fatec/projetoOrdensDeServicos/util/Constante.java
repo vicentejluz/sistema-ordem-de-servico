@@ -36,6 +36,7 @@ public class Constante {
     public static final String ERRO_OBTER_DOCUMENTO = "Erro ao obter documentos: ";
     public static final String ERRO_ENVIAR_ORCAMENTO = "Erro ao enviar orçamento!";
     public static final String PREENCHA_CAMPO_EMAIL = "ERRO - Preencha o campo e-mail";
+    public static final String ERRO_DELETAR_CONTA = "Erro ao deletar conta!";
     public static final String FALHA_ATUALIZAR_SENHA = "Falha ao atualizar a Senha.";
     public static final String FALHA_ATUALIZAR_PERFIL = "Falha ao atualizar o perfil.";
     public static final String NOME = "nome";
@@ -51,6 +52,7 @@ public class Constante {
     public static final String CHAVE_NOME = "chaveNome";
     public static final String TAG_CADASTRO = "Cadastro";
     public static final String TAG_ORCAMENTO = "Orçamento";
+    public static final String TAG_INFORMACAO_SERVICO = "Informação do servico";
     public static final String TAG_LOGIN = "Login";
     public static final String TAG_SUCESSO = "SUCESSO";
     public static final String TAG_ERRO = "ERRO";
@@ -73,6 +75,7 @@ public class Constante {
     public static final String CERTEZA_ALTERAR_SENHA = "Tem certeza que deseja alterar a senha?";
     public static final String CERTEZA_ALTERAR_PERFIL = "Tem certeza que deseja alterar seu perfil?";
     public static final String CERTEZA_EXCLUIR = "Tem certeza que deseja excluir: ";
+    public static final String CERTEZA_EXCLUIR_CONTA = "Tem certeza que deseja excluir sua conta: ";
     public static final String ID_GERADO = "ID gerado: ";
     public static final String REGISTRADO_SUCESSO = "Registrado com sucesso: ";
     public static final String ALTERE_NOME_TELEFONE = "Altere nome ou telefone do perfil";
@@ -94,8 +97,10 @@ public class Constante {
     public static final String TELEFONE_INVALIDO = "Telefone Inválido";
     public static final String EMAIL_INVALIDO_OU_NAO_ENCONTRADO = "E-mail inválido ou não encontrado";
     public static final String SERVICO_NAO_ENCONTRADO = "Serviços não encontrado";
+    public static final String NENHUM_SERVICO_CADASTRADO = "Nenhum serviço cadastrado!!";
     public static final String SERVICO_JA_EXISTE = "Serviço já existe";
     public static final String SERVICO_DELETADO_SUCESSO = "Serviço deletado com sucesso";
+    public static final String CONTA_DELETADO_SUCESSO = "Conta deletada com sucesso";
     public static final String PRIVILEGIO_NAO_ENCONTRADO = "Privilegio não encontrado";
     public static final String NAO_POSSIVEL_ENVIAR_MSG_VAZIA = "Não é possível enviar mensagem vazia";
     public static final String CRIAR_USUARIO_FALHOU = "CriarUsuarioFalhou: ";
@@ -107,4 +112,6 @@ public class Constante {
             "cliente tem que cancelar o serviço";
     public static final String MUDAR_CANCELADO_TEM_AGUARDANDO_APROVACAO = "Para Mudar preço " +
             "depois de cancelado mude status para, aguardando aprovação!!";
+    public static final String BUSCANDO_DADOS = "Buscando Dados...";
+    public static final String BUSCAR = "Buscar";
 }
