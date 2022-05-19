@@ -1,5 +1,8 @@
 # Projeto 2 Sistema Ordem De Serviço Tópicos Especiais em Informática
 
+<p>OBS: Para funcionar o app junto com o firebase, terá que criar um projeto no firebase e configurar para fazer integração com seu projeto android.</p>
+<p>Tutorial: https://firebase.google.com/docs/android/setup?hl=pt-br</p>
+
 TIPO DE NEGÓCIO: EMPRESA DE DESENVOLVIMENTO DE SOFTWARES 
 
 OBJETIVO: 
