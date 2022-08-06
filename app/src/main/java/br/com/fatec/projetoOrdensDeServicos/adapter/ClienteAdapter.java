@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import br.com.fatec.projetoOrdensDeServicos.R;
+import br.com.fatec.projetoOrdensDeServicos.databinding.ListaItemClienteBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.Cliente;
 import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
@@ -41,9 +42,9 @@ public class ClienteAdapter extends RecyclerView.Adapter<ClienteAdapter.ClienteV
     @Override
     public ClienteAdapter.ClienteViewHolder onCreateViewHolder(
             @NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.lista_item_cliente, parent,
-                false);
-        return new ClienteViewHolder(v, statusContaClickListener, editarClienteClickListener,
+        ListaItemClienteBinding binding = ListaItemClienteBinding.inflate(
+                LayoutInflater.from(context), parent, false);
+        return new ClienteViewHolder(binding, statusContaClickListener, editarClienteClickListener,
                 listarServicoClickListener);
     }
 
@@ -91,33 +92,36 @@ public class ClienteAdapter extends RecyclerView.Adapter<ClienteAdapter.ClienteV
         EditarClienteClickListener editarClienteClickListener;
         ListarServicoClickListener listarServicoClickListener;
 
-        public ClienteViewHolder(@NonNull View itemView,
+        public ClienteViewHolder(@NonNull ListaItemClienteBinding binding,
                                  StatusContaClickListener statusContaClickListener,
                                  EditarClienteClickListener editarClienteClickListener,
                                  ListarServicoClickListener listarServicoClickListener) {
-            super(itemView);
+            super(binding.getRoot());
             this.statusContaClickListener = statusContaClickListener;
             this.editarClienteClickListener = editarClienteClickListener;
             this.listarServicoClickListener = listarServicoClickListener;
-            txtNome = itemView.findViewById(R.id.txtNome);
-            txtEmail = itemView.findViewById(R.id.txtEmail);
-            txtTel = itemView.findViewById(R.id.txtTel);
-            txtStatusConta = itemView.findViewById(R.id.txtStatusConta);
-            imBStatusConta = itemView.findViewById(R.id.imBStatusConta);
-            imBEditar = itemView.findViewById(R.id.imBEditar);
-            imBStatusConta.setOnClickListener(this);
-            imBEditar.setOnClickListener(this);
+            txtNome = binding.txtNome;
+            txtEmail = binding.txtEmail;
+            txtTel = binding.txtTel;
+            txtStatusConta = binding.txtStatusConta;
+            imBStatusConta = binding.imBStatusConta;
+            imBEditar = binding.imBEditar;
+            imBStatusConta.setOnClickListener(this::statusConta);
+            imBEditar.setOnClickListener(this::editarCliente);
             itemView.setOnClickListener(this);
+        }
+
+        public void statusConta(View v){
+            statusContaClickListener.StatusContaClick(v, getAbsoluteAdapterPosition());
+        }
+
+        public void editarCliente(View v){
+            editarClienteClickListener.EditarClienteClick(v, getAbsoluteAdapterPosition());
         }
 
         @Override
         public void onClick(@NonNull View v) {
-            if (v.getId() == R.id.imBStatusConta)
-                statusContaClickListener.StatusContaClick(v, getAbsoluteAdapterPosition());
-            else if (v.getId() == R.id.imBEditar)
-                editarClienteClickListener.EditarClienteClick(v, getAbsoluteAdapterPosition());
-            else
-                listarServicoClickListener.ListarServicoClick(v, getAbsoluteAdapterPosition());
+            listarServicoClickListener.ListarServicoClick(v, getAbsoluteAdapterPosition());
         }
     }
 

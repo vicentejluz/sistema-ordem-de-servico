@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.fatec.projetoOrdensDeServicos.R;
+import br.com.fatec.projetoOrdensDeServicos.databinding.ListaItemServicoAdminBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.OrdemServico;
 import br.com.fatec.projetoOrdensDeServicos.entity.StatusOrdemServico;
 import br.com.fatec.projetoOrdensDeServicos.util.Constante;
@@ -52,9 +53,9 @@ public class OrdemServicoAdminAdapter extends RecyclerView.Adapter<OrdemServicoA
     @Override
     public OrdemServicoAdminAdapter.OrdemServicoAdminViewHolder onCreateViewHolder(
             @NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.lista_item_servico_admin, parent,
-                false);
-        return new OrdemServicoAdminViewHolder(v, ordemServicoAdminClickListener,
+        ListaItemServicoAdminBinding binding = ListaItemServicoAdminBinding.inflate(
+                LayoutInflater.from(context), parent, false);
+        return new OrdemServicoAdminViewHolder(binding, ordemServicoAdminClickListener,
                 excluirOrdemServicoClickListener, chatServicoClickListener);
     }
 
@@ -73,28 +74,26 @@ public class OrdemServicoAdminAdapter extends RecyclerView.Adapter<OrdemServicoA
 
         holder.imBExcluir.setEnabled(true);
         TooltipCompat.setTooltipText(holder.imBExcluir, Constante.EXCLUIR_SERVICO);
-        holder.txtNomeServico.setText(ordemServico.getNomeServico().substring(0, 1)
-                .toUpperCase().concat(ordemServico.getNomeServico().substring(1)));
-        holder.txtDescricao.setText(ordemServico.getDescricao().substring(0, 1)
-                .toUpperCase().concat(ordemServico.getDescricao().substring(1)));
-        holder.txtPreco.setText(NumberFormat.getCurrencyInstance(Constante.LOCALE).format(ordemServico
-                .getPreco()));
-        holder.txtStatus.setText(ordemServico.getStatus().substring(0, 1)
-                .concat(ordemServico.getStatus().substring(1).toLowerCase()));
+        holder.txtNomeServico.setText(ordemServico.getNomeServico().substring(0, 1).toUpperCase()
+                .concat(ordemServico.getNomeServico().substring(1)));
+        if(ordemServico.getPreco() != null)
+            holder.txtPreco.setText(NumberFormat.getCurrencyInstance(Constante.LOCALE).format(
+                    ordemServico.getPreco()));
+        else
+            holder.txtPreco.setText(Constante.SEM_PRECO);
+        holder.txtStatus.setText(ordemServico.getStatus().name().substring(0, 1).concat(
+                ordemServico.getStatus().name().substring(1).toLowerCase()));
         TooltipCompat.setTooltipText(holder.imBChat, Constante.CHAT);
         restricoes(holder, ordemServico);
     }
 
     private void restricoes(OrdemServicoAdminViewHolder holder,
                             @NonNull OrdemServico ordemServico) {
-        if (!ordemServico.getStatus().equalsIgnoreCase(StatusOrdemServico.FINALIZADA.name())) {
+        if (!ordemServico.getStatus().name().equalsIgnoreCase(StatusOrdemServico.FINALIZADA.name())) {
             holder.imBExcluir.setBackgroundResource(R.drawable.industry_trash_icon);
             holder.imBExcluir.setEnabled(false);
         } else
             holder.imBExcluir.setBackgroundResource(R.drawable.user_trash_full_icon);
-
-        if (ordemServico.getPreco() == 0.0)
-            holder.txtPreco.setText(Constante.SEM_PRECO);
     }
 
     @Override
@@ -141,43 +140,43 @@ public class OrdemServicoAdminAdapter extends RecyclerView.Adapter<OrdemServicoA
 
     public static class OrdemServicoAdminViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
-        TextView txtNomeServico, txtDescricao, txtStatus, txtCliente, txtPreco, tVCliente;
+        TextView txtNomeServico, txtStatus, txtCliente, txtPreco, tVCliente;
         ImageButton imBExcluir, imBChat;
         OrdemServicoAdminClickListener ordemServicoAdminClickListener;
         ExcluirOrdemServicoClickListener excluirOrdemServicoClickListener;
         ChatServicoClickListener chatServicoClickListener;
 
-        public OrdemServicoAdminViewHolder(@NonNull View itemView,
+        public OrdemServicoAdminViewHolder(@NonNull ListaItemServicoAdminBinding binding,
                                            OrdemServicoAdminClickListener ordemServicoAdminClickListener,
                                            ExcluirOrdemServicoClickListener excluirOrdemServicoClickListener,
                                            ChatServicoClickListener chatServicoClickListener) {
-            super(itemView);
-            txtNomeServico = itemView.findViewById(R.id.txtNomeServico);
-            txtDescricao = itemView.findViewById(R.id.txtDescricao);
-            txtStatus = itemView.findViewById(R.id.txtStatus);
-            txtCliente = itemView.findViewById(R.id.txtCliente);
-            txtPreco = itemView.findViewById(R.id.txtPreco);
-            tVCliente = itemView.findViewById(R.id.tVCliente);
-            imBExcluir = itemView.findViewById(R.id.imBExcluir);
-            imBChat = itemView.findViewById(R.id.imBChat);
-            imBExcluir.setOnClickListener(this);
-            imBChat.setOnClickListener(this);
+            super(binding.getRoot());
+            txtNomeServico = binding.txtNomeServico;
+            txtStatus = binding.txtStatus;
+            txtCliente = binding.txtCliente;
+            txtPreco = binding.txtPreco;
+            tVCliente = binding.tVCliente;
+            imBExcluir = binding.imBExcluir;
+            imBChat = binding.imBChat;
+            imBExcluir.setOnClickListener(this::excluirSevico);
+            imBChat.setOnClickListener(this::chatServico);
             this.ordemServicoAdminClickListener = ordemServicoAdminClickListener;
             this.excluirOrdemServicoClickListener = excluirOrdemServicoClickListener;
             this.chatServicoClickListener = chatServicoClickListener;
-            itemView.setOnClickListener(this);
+            binding.getRoot().setOnClickListener(this);
+        }
+
+        public void excluirSevico(View v){
+            excluirOrdemServicoClickListener.ExcluirOrdemServicoClick(v, getAbsoluteAdapterPosition());
+        }
+
+        public void chatServico(View v){
+            chatServicoClickListener.ChatServicoClick(v, getAbsoluteAdapterPosition());
         }
 
         @Override
         public void onClick(View v) {
-            if (v.getId() == R.id.imBExcluir)
-                excluirOrdemServicoClickListener.ExcluirOrdemServicoClick(v,
-                        getAbsoluteAdapterPosition());
-            else if (v.getId() == R.id.imBChat)
-                chatServicoClickListener.ChatServicoClick(v, getAbsoluteAdapterPosition());
-            else
-                ordemServicoAdminClickListener.OrdemServicoAdminClick(v,
-                        getAbsoluteAdapterPosition());
+            ordemServicoAdminClickListener.OrdemServicoAdminClick(v, getAbsoluteAdapterPosition());
         }
     }
 

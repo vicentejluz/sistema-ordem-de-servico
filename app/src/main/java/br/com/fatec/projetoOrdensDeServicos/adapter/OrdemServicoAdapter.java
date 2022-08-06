@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.fatec.projetoOrdensDeServicos.databinding.ListaItemServicoBinding;
 import br.com.fatec.projetoOrdensDeServicos.entity.OrdemServico;
-import br.com.fatec.projetoOrdensDeServicos.R;
 import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
 public class OrdemServicoAdapter extends RecyclerView.Adapter<OrdemServicoAdapter
@@ -44,9 +44,9 @@ public class OrdemServicoAdapter extends RecyclerView.Adapter<OrdemServicoAdapte
     @Override
     public OrdemServicoAdapter.OrdemServicoViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                                          int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.lista_item_servico, parent,
-                false);
-        return new OrdemServicoViewHolder(v, ordemServicoClickListener, chatServicoClickListener);
+        ListaItemServicoBinding binding = ListaItemServicoBinding.inflate(LayoutInflater.from(context),
+                parent, false);
+        return new OrdemServicoViewHolder(binding, ordemServicoClickListener, chatServicoClickListener);
     }
 
     @Override
@@ -56,10 +56,8 @@ public class OrdemServicoAdapter extends RecyclerView.Adapter<OrdemServicoAdapte
 
         holder.txtNomeServico.setText(ordemServico.getNomeServico().substring(0, 1)
                 .toUpperCase().concat(ordemServico.getNomeServico().substring(1)));
-        holder.txtDescricao.setText(ordemServico.getDescricao().substring(0, 1)
-                .toUpperCase().concat(ordemServico.getDescricao().substring(1)));
-        holder.txtStatus.setText(ordemServico.getStatus().substring(0, 1)
-                .concat(ordemServico.getStatus().substring(1).toLowerCase()));
+        holder.txtStatus.setText(ordemServico.getStatus().name().substring(0, 1)
+                .concat(ordemServico.getStatus().name().substring(1).toLowerCase()));
         TooltipCompat.setTooltipText(holder.imBChat, Constante.CHAT_SUPORTE);
     }
 
@@ -106,31 +104,31 @@ public class OrdemServicoAdapter extends RecyclerView.Adapter<OrdemServicoAdapte
 
     public static class OrdemServicoViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
-        TextView txtNomeServico, txtDescricao, txtStatus;
+        TextView txtNomeServico, txtStatus;
         ImageButton imBChat;
         OrdemServicoClickListener ordemServicoClickListener;
         ChatServicoClickListener chatServicoClickListener;
 
-        public OrdemServicoViewHolder(@NonNull View itemView,
+        public OrdemServicoViewHolder(@NonNull ListaItemServicoBinding binding,
                                       OrdemServicoClickListener ordemServicoClickListener,
                                       ChatServicoClickListener chatServicoClickListener) {
-            super(itemView);
-            txtNomeServico = itemView.findViewById(R.id.txtNomeServico);
-            txtDescricao = itemView.findViewById(R.id.txtDescricao);
-            txtStatus = itemView.findViewById(R.id.txtStatus);
-            imBChat = itemView.findViewById(R.id.imBChat);
+            super(binding.getRoot());
+            txtNomeServico = binding.txtNomeServico;
+            txtStatus = binding.txtStatus;
+            imBChat = binding.imBChat;
             this.ordemServicoClickListener = ordemServicoClickListener;
             this.chatServicoClickListener = chatServicoClickListener;
-            imBChat.setOnClickListener(this);
-            itemView.setOnClickListener(this);
+            imBChat.setOnClickListener(this::chatServico);
+            binding.getRoot().setOnClickListener(this);
+        }
+
+        public void chatServico(View v) {
+            chatServicoClickListener.ChatServicoClick(v, getAbsoluteAdapterPosition());
         }
 
         @Override
         public void onClick(View v) {
-            if (v.getId() == R.id.imBChat)
-                chatServicoClickListener.ChatServicoClick(v, getAbsoluteAdapterPosition());
-            else
-                ordemServicoClickListener.OrdemServicoClick(v, getAbsoluteAdapterPosition());
+            ordemServicoClickListener.OrdemServicoClick(v, getAbsoluteAdapterPosition());
         }
     }
 
