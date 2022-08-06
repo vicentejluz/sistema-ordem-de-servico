@@ -57,9 +57,9 @@ public class TelaCadastro extends AppCompatActivity implements View.OnClickListe
         String nome = Objects.requireNonNull(binding.txtNome.getText()).toString().trim();
         String telefone = Objects.requireNonNull(binding.txtTel.getText()).toString().trim();
         String email = Objects.requireNonNull(binding.txtEmail.getText()).toString().trim();
-        String senha = Objects.requireNonNull(binding.txtSenha.getText()).toString().trim();
+        String senha = Objects.requireNonNull(binding.txtSenha.getText()).toString();
         String confirmarSenha = Objects.requireNonNull(binding.txtConfirmarSenha.getText())
-                .toString().trim();
+                .toString();
         cliente = new Cliente(nome, email, telefone, Constante.DESBLOQUEADO);
         if (cliente.getNome().isEmpty() || cliente.getTelefone().isEmpty()
                 || cliente.getEmail().isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty()) {

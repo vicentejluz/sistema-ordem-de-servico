@@ -183,7 +183,7 @@ public class TelaChat extends AppCompatActivity {
     }
 
     private void sendMessage(String fromId) {
-        String texto = binding.editTChat.getText().toString().trim();
+        String texto = binding.editTChat.getText().toString();
 
         binding.editTChat.setText(null);
 
@@ -193,23 +193,21 @@ public class TelaChat extends AppCompatActivity {
             toId = Constante.IDCHAT;
         Timestamp dataEnvio = Timestamp.now();
 
-        Comentario comentario = new Comentario();
-        comentario.setFromId(fromId);
-        comentario.setToId(toId);
-        comentario.setDataEnvio(dataEnvio);
-        comentario.setDescricao(texto);
+        Comentario comentario = new Comentario(dataEnvio, texto, fromId, toId);
 
         if (!comentario.getDescricao().isEmpty()) {
             db.collection(Constante.USUARIOS).document(usuarioID)
                     .collection(Constante.ORDENS_SERVICOS).document(idServico)
-                    .collection(Constante.COMENTARIO).document(fromId).collection(toId)
+                    .collection(Constante.COMENTARIO).document(comentario.getFromId())
+                    .collection(comentario.getToId())
                     .add(comentario)
                     .addOnSuccessListener(documentReference -> Log.d(Constante.TAG_SUCESSO,
                             documentReference.getId()))
                     .addOnFailureListener(e -> Log.e(Constante.TAG_ERRO, e.getMessage(), e));
             db.collection(Constante.USUARIOS).document(usuarioID)
                     .collection(Constante.ORDENS_SERVICOS).document(idServico)
-                    .collection(Constante.COMENTARIO).document(toId).collection(fromId)
+                    .collection(Constante.COMENTARIO).document(comentario.getToId())
+                    .collection(comentario.getFromId())
                     .add(comentario)
                     .addOnSuccessListener(documentReference -> Log.d(Constante.TAG_SUCESSO,
                             documentReference.getId()))

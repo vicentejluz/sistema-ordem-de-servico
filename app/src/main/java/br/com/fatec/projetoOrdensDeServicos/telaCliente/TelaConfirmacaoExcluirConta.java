@@ -48,7 +48,7 @@ public class TelaConfirmacaoExcluirConta extends AppCompatActivity implements Vi
     public void excluirConta() {
         Intent intent = getIntent();
         String nome = intent.getStringExtra(Constante.CHAVE_NOME);
-        String senha = Objects.requireNonNull(binding.txtSenha.getText()).toString().trim();
+        String senha = Objects.requireNonNull(binding.txtSenha.getText()).toString();
         if (senha.isEmpty()) {
             binding.txtInputLayout1.setError(Constante.PREENCHA_TODOS_CAMPOS);
         } else {

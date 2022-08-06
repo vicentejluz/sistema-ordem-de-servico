@@ -6,9 +6,7 @@ public class Constante {
     public static final int TEMPO_3SEG = 3000;
     public static final int TEMPO_2SEG = 2000;
     public static final int RED = 0x70F43636;
-    public static final Double PRECO_ZERO = 0.0;
     public static final String ZERO = "0.00";
-    public static final String STATUS_SEM_VALOR = "-";
     public static final String IDCHAT = "pb6IdWjCKogMvZlnpH4bl13lCM22AD";
     public static final String ATENCAO = "Atenção!!";
     public static final String PONTO_INTERROGACAO = "?";
@@ -70,7 +68,6 @@ public class Constante {
     public static final String CHAT = "Chat";
     public static final String CHAT_SUPORTE = "Chat de suporte";
     public static final String ORCAMENTO_ENVIADO = "Orçamento enviado.";
-    public static final String AGUARDANDO_APROVACAO = "AGUARDANDO APROVAÇÃO";
     public static final String DIGITE_SENHA = "Digite sua Senha:";
     public static final String CERTEZA_ALTERAR_SENHA = "Tem certeza que deseja alterar a senha?";
     public static final String CERTEZA_ALTERAR_PERFIL = "Tem certeza que deseja alterar seu perfil?";
@@ -105,13 +102,15 @@ public class Constante {
     public static final String NAO_POSSIVEL_ENVIAR_MSG_VAZIA = "Não é possível enviar mensagem vazia";
     public static final String CRIAR_USUARIO_FALHOU = "CriarUsuarioFalhou: ";
     public static final String AUTENTICACAO_FALHOU = "Autenticação: falhou";
-    public static final String LOGADO_SUCESSO = "Logado com sucesso: ";
     public static final String DOCUMENTO_NAO_EXISTE = "Documento não existe";
     public static final String FALHA_PROCURAR = "Falha a procurar ";
     public static final String MUDAR_ABERTO_TEM_CANCELAR = "Para Mudar preço depois de Aberto o " +
             "cliente tem que cancelar o serviço";
-    public static final String MUDAR_CANCELADO_TEM_AGUARDANDO_APROVACAO = "Para Mudar preço " +
-            "depois de cancelado mude status para, aguardando aprovação!!";
+    public static final String MUDAR_CANCELADO_PARA_PROCESSANDO = "Para Mudar preço " +
+            "depois de cancelado mude status para, processando!!";
     public static final String BUSCANDO_DADOS = "Buscando Dados...";
     public static final String BUSCAR = "Buscar";
+
+    private Constante() {
+    }
 }

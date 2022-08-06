@@ -41,11 +41,9 @@ public class TelaAlterarSenha extends AppCompatActivity implements View.OnClickL
     }
 
     private void alterarSenhaUsuario() {
-        novaSenha = Objects.requireNonNull(binding.txtNovaSenha.getText()).toString().trim();
-        String confimarSenha = Objects.requireNonNull(binding.txtConfirmarSenha.getText()).toString()
-                .trim();
-        String senhaAntiga = Objects.requireNonNull(binding.txtSenhaAntiga.getText()).toString()
-                .trim();
+        novaSenha = Objects.requireNonNull(binding.txtNovaSenha.getText()).toString();
+        String confimarSenha = Objects.requireNonNull(binding.txtConfirmarSenha.getText()).toString();
+        String senhaAntiga = Objects.requireNonNull(binding.txtSenhaAntiga.getText()).toString();
         if (novaSenha.isEmpty() || confimarSenha.isEmpty() || senhaAntiga.isEmpty()) {
             Toast.makeText(this, Constante.PREENCHA_TODOS_CAMPOS,
                     Toast.LENGTH_LONG).show();

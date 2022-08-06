@@ -111,7 +111,7 @@ public class TelaInformacaoServico extends AppCompatActivity {
                     binding.btnAceitar.setEnabled(false);
                     binding.btnCancelar.setEnabled(false);
                 } else {
-                    if (preco > 0)
+                    if (preco != null && preco >= 0)
                         binding.btnAceitar.setEnabled(true);
                     binding.btnCancelar.setEnabled(true);
                 }
@@ -121,7 +121,7 @@ public class TelaInformacaoServico extends AppCompatActivity {
 
     private void setarDadosServico() {
         ordemServico = new OrdemServico(nomeServico, descricao, preco,
-                timestampDataAbertura, timestampDataFinalizacao, status);
+                timestampDataAbertura, timestampDataFinalizacao, StatusOrdemServico.valueOf(status));
         DecimalFormat decimalFormat = new DecimalFormat(Constante.ZERO);
 
         if (ordemServico.getDataAbertura() != null)
@@ -133,7 +133,7 @@ public class TelaInformacaoServico extends AppCompatActivity {
                 .concat(ordemServico.getNomeServico().substring(1)));
         binding.txtDescricao.setText(ordemServico.getDescricao().substring(0, 1).toUpperCase()
                 .concat(ordemServico.getDescricao().substring(1)));
-        if (preco <= 0)
+        if (preco == null || preco <= 0)
             binding.txtPreco.setText("");
         else {
             binding.txtPreco.addTextChangedListener(new MascaraMonetaria(binding.txtPreco,
@@ -142,11 +142,7 @@ public class TelaInformacaoServico extends AppCompatActivity {
         }
         binding.txtDataAbertura.setText(dataAbertura);
         binding.txtDataFinal.setText(dataFinalizacao);
-        if (status.equals(Constante.STATUS_SEM_VALOR)) {
-            binding.txtStatus.setText("");
-        } else {
-            binding.txtStatus.setText(ordemServico.getStatus());
-        }
+        binding.txtStatus.setText(ordemServico.getStatus().name());
     }
 
     private void aceitarServico() {

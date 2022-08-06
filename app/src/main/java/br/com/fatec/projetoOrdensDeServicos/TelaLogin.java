@@ -25,7 +25,8 @@ import br.com.fatec.projetoOrdensDeServicos.telaCliente.TelaMenuCliente;
 import br.com.fatec.projetoOrdensDeServicos.util.Constante;
 
 public class TelaLogin extends AppCompatActivity implements View.OnClickListener {
-    private String email, privilegio, statusConta;
+    private String privilegio;
+    private String statusConta;
     private FirebaseAuth autenticacao;
     private final FirebaseFirestore DB = FirebaseFirestore.getInstance();
     private ActivityLoginBinding binding;
@@ -44,8 +45,8 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
     }
 
     private void logarUsuario() {
-        email = Objects.requireNonNull(binding.txtEmail.getText()).toString().trim();
-        String senha = Objects.requireNonNull(binding.txtSenha.getText()).toString().trim();
+        String email = Objects.requireNonNull(binding.txtEmail.getText()).toString().trim();
+        String senha = Objects.requireNonNull(binding.txtSenha.getText()).toString();
         if (email.isEmpty() || senha.isEmpty()) {
             Toast.makeText(TelaLogin.this, Constante.PREENCHA_TODOS_CAMPOS,
                     Toast.LENGTH_LONG).show();
@@ -61,8 +62,10 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
                                         if (task1.isSuccessful()) {
                                             DocumentSnapshot document = task1.getResult();
                                             if (Objects.requireNonNull(document).exists()) {
-                                                privilegio = document.getString(Constante.PRIVILEGIO);
-                                                statusConta = document.getString(Constante.STATUS_CONTA);
+                                                privilegio = document.getString(
+                                                        Constante.PRIVILEGIO);
+                                                statusConta = document.getString(
+                                                        Constante.STATUS_CONTA);
                                                 if (Objects.requireNonNull(statusConta)
                                                         .equalsIgnoreCase(Constante.BLOQUEADO)) {
                                                     Toast.makeText(TelaLogin.this,
@@ -70,7 +73,8 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
                                                                     .LENGTH_LONG).show();
                                                     FirebaseAuth.getInstance().signOut();
                                                 } else {
-                                                    if (privilegio.equalsIgnoreCase(Constante.CLIENTE)) {
+                                                    if (privilegio.equalsIgnoreCase(
+                                                            Constante.CLIENTE)) {
                                                         mudancaActivity(TelaMenuCliente.class);
                                                     } else {
                                                         mudancaActivity(TelaMenuAdmin.class);
@@ -133,8 +137,6 @@ public class TelaLogin extends AppCompatActivity implements View.OnClickListener
         binding.btnCadastro.setEnabled(false);
         binding.btnRecuperarSenha.setEnabled(false);
         new Handler().postDelayed(() -> {
-            Toast.makeText(TelaLogin.this, Constante.LOGADO_SUCESSO + email,
-                    Toast.LENGTH_LONG).show();
             Intent intent = new Intent(TelaLogin.this, tela);
             startActivity(intent);
             finish();

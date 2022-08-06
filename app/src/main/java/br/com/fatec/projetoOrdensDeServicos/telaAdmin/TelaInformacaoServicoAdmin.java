@@ -48,7 +48,7 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
     private OrdemServico ordemServico;
     DecimalFormat decimalFormat = new DecimalFormat(Constante.ZERO);
     String[] statusOrdensServicos = new String[]{
-            Constante.AGUARDANDO_APROVACAO,
+            StatusOrdemServico.PROCESSANDO.name(),
             StatusOrdemServico.ABERTA.name(),
             StatusOrdemServico.CANCELADA.name(),
             StatusOrdemServico.FINALIZADA.name()
@@ -161,7 +161,7 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
 
     private void setarDadosServico() {
         ordemServico = new OrdemServico(nomeServico, descricao, preco,
-                timestampDataAbertura, timestampDataFinalizacao, status);
+                timestampDataAbertura, timestampDataFinalizacao, StatusOrdemServico.valueOf(status));
 
         if (ordemServico.getDataAbertura() != null)
             dataAbertura = SIMPLE_DATE_FORMAT.format(ordemServico.getDataAbertura().toDate());
@@ -172,11 +172,12 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
                 .concat(ordemServico.getNomeServico().substring(1)));
         binding.txtDescricao.setText(ordemServico.getDescricao().substring(0, 1).toUpperCase()
                 .concat(ordemServico.getDescricao().substring(1)));
-        binding.txtPreco.setText(decimalFormat.format(ordemServico.getPreco()));
+        if(ordemServico.getPreco() != null)
+            binding.txtPreco.setText(decimalFormat.format(ordemServico.getPreco()));
 
         binding.txtDataAbertura.setText(dataAbertura);
         binding.txtDataFinal.setText(dataFinalizacao);
-        if (status.equals(Constante.STATUS_SEM_VALOR))
+        if (status.equals(StatusOrdemServico.PROCESSANDO.name()))
             binding.txtStatus.setSelection(0);
         else if (status.equals(StatusOrdemServico.ABERTA.name()))
             binding.txtStatus.setSelection(1);
@@ -195,7 +196,8 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
     }
 
     private void status() {
-        if (binding.txtStatus.getSelectedItem().toString().equals(Constante.AGUARDANDO_APROVACAO)) {
+        if (binding.txtStatus.getSelectedItem().toString().equals(StatusOrdemServico.PROCESSANDO
+                .name())) {
             binding.txtStatus.setEnabled(false);
         } else {
             if (binding.txtStatus.getSelectedItem().toString().equals(StatusOrdemServico.ABERTA
@@ -239,26 +241,26 @@ public class TelaInformacaoServicoAdmin extends AppCompatActivity implements Vie
                 .replaceAll("[^0-9,]", "").replace(",", ".");
         ordemServico.setPreco(Double.valueOf(conStringPreco));
         if ((item.equals(StatusOrdemServico.CANCELADA.name())) &&
-                (!preco.equals(ordemServico.getPreco()))) {
-            Toast.makeText(this, Constante.MUDAR_CANCELADO_TEM_AGUARDANDO_APROVACAO,
+                (!ordemServico.getPreco().equals(preco))) {
+            Toast.makeText(this, Constante.MUDAR_CANCELADO_PARA_PROCESSANDO,
                     Toast.LENGTH_LONG).show();
             onStart();
         } else if ((item.equals(StatusOrdemServico.ABERTA.name())) &&
-                (!preco.equals(ordemServico.getPreco()))) {
+                (!ordemServico.getPreco().equals(preco))) {
             Toast.makeText(this, Constante.MUDAR_ABERTO_TEM_CANCELAR, Toast.LENGTH_LONG).show();
             onStart();
-        } else if (item.equals(Constante.AGUARDANDO_APROVACAO) && ordemServico.getPreco() == 0.0) {
+        } else if (item.equals(StatusOrdemServico.PROCESSANDO.name()) && ordemServico.getPreco() <= 0.0) {
             Toast.makeText(this, Constante.ADD_VALOR_MAIOR_0, Toast.LENGTH_LONG).show();
         } else {
-            if (item.equals(Constante.AGUARDANDO_APROVACAO))
-                item = Constante.STATUS_SEM_VALOR;
+            if (item.equals(StatusOrdemServico.PROCESSANDO.name()))
+                item = StatusOrdemServico.PROCESSANDO.name();
             if (!status.equals(item))
                 data.put(Constante.STATUS, item);
             ordemServico.setDescricao(Objects.requireNonNull(binding.txtDescricao.getText())
                     .toString().trim());
             if (!descricao.equals(ordemServico.getDescricao()))
                 data.put(Constante.DESCRICAO, ordemServico.getDescricao());
-            if (!preco.equals(ordemServico.getPreco()))
+            if (!ordemServico.getPreco().equals(preco))
                 data.put(Constante.PRECO, ordemServico.getPreco());
             if (item.equals(StatusOrdemServico.FINALIZADA.name()))
                 data.put(Constante.DATA_ABERTURA, timestamp);

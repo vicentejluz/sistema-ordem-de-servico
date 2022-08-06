@@ -61,8 +61,8 @@ public class TelaConfigConta extends AppCompatActivity {
                 getTelefone = documentSnapshot.getString(Constante.TELEFONE);
                 getEmail = USUARIO.getEmail();
                 binding.txtEmail.setText(getEmail);
-                binding.txtNome.setText(documentSnapshot.getString(getNome));
-                binding.txtTel.setText(documentSnapshot.getString(getTelefone));
+                binding.txtNome.setText(getNome);
+                binding.txtTel.setText(getTelefone);
             } else {
                 FirebaseAuth.getInstance().signOut();
                 finish();
@@ -103,8 +103,7 @@ public class TelaConfigConta extends AppCompatActivity {
         Dialog alterarPerfil = builder.create();
         alterarPerfil.create();
         dialogBinding.btnConfirmar.setOnClickListener(v1 -> {
-            confimarSenha = Objects.requireNonNull(dialogBinding.txtSenha.getText()).toString()
-                    .trim();
+            confimarSenha = Objects.requireNonNull(dialogBinding.txtSenha.getText()).toString();
             if (confimarSenha.isEmpty()) {
                 dialogBinding.txtInputLayout1.setError(Constante.PREENCHA_CAMPO);
             } else {

@@ -8,35 +8,29 @@ public class Comentario {
     private String fromId;
     private String toId;
 
-    public Timestamp getDataEnvio() {
-        return dataEnvio;
+    public Comentario() {
     }
 
-    public void setDataEnvio(Timestamp dataEnvio) {
+    public Comentario(Timestamp dataEnvio, String descricao, String fromId, String toId) {
         this.dataEnvio = dataEnvio;
+        this.descricao = descricao;
+        this.fromId = fromId;
+        this.toId = toId;
+    }
+
+    public Timestamp getDataEnvio() {
+        return dataEnvio;
     }
 
     public String getDescricao() {
         return descricao;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
     public String getFromId() {
         return fromId;
     }
 
-    public void setFromId(String fromId) {
-        this.fromId = fromId;
-    }
-
     public String getToId() {
         return toId;
-    }
-
-    public void setToId(String toId) {
-        this.toId = toId;
     }
 }

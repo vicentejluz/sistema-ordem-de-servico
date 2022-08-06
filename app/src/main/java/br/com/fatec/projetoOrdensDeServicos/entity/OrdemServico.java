@@ -5,7 +5,7 @@ import com.google.firebase.Timestamp;
 public class OrdemServico {
     private String nomeServico;
     private String descricao;
-    private String status;
+    private StatusOrdemServico status;
     private Double preco;
     private Timestamp dataAbertura;
     private Timestamp datafinalizacao;
@@ -13,14 +13,14 @@ public class OrdemServico {
     public OrdemServico() {
     }
 
-    public OrdemServico(String nomeServico, String descricao, Double preco) {
+    public OrdemServico(String nomeServico, String descricao, StatusOrdemServico status) {
         this.nomeServico = nomeServico;
         this.descricao = descricao;
-        this.preco = preco;
+        this.status = status;
     }
 
     public OrdemServico(String nomeServico, String descricao, Double preco,
-                        Timestamp dataAbertura, Timestamp datafinalizacao, String status) {
+                        Timestamp dataAbertura, Timestamp datafinalizacao, StatusOrdemServico status) {
         this.nomeServico = nomeServico;
         this.descricao = descricao;
         this.preco = preco;
@@ -58,7 +58,7 @@ public class OrdemServico {
         return datafinalizacao;
     }
 
-    public String getStatus() {
+    public StatusOrdemServico getStatus() {
         return status;
     }
 
