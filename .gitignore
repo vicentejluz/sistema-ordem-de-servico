@@ -1,4 +1,5 @@
 *.iml
+*.json
 .gradle
 /local.properties
 /.idea/caches
@@ -14,4 +15,3 @@
 .externalNativeBuild
 .cxx
 local.properties
-*.json
