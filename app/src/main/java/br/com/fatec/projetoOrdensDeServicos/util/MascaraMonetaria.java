@@ -8,6 +8,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Objects;
@@ -52,7 +53,7 @@ public class MascaraMonetaria implements TextWatcher {
         String cleanString = value.replaceAll(replaceable, "");
 
         return new BigDecimal(cleanString).setScale(
-                2, BigDecimal.ROUND_FLOOR).divide(new BigDecimal(100), BigDecimal.ROUND_FLOOR
+                2, RoundingMode.FLOOR).divide(new BigDecimal(100), RoundingMode.FLOOR
         );
     }
 }
